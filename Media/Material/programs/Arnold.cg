@@ -1,0 +1,98 @@
+//The simplest (EXACT, see remarks) perpixel lighting I could do is:
+ //(though it still supports ambient and specular terms, so it could still be simpler :)
+ 
+ //Note: lighting is done in object-space, in the frag shader
+ 
+ void Simple_Perpixel_Vert(
+                        //ADDED BY EUGEN - support for texture with the per pixel lighting
+                        float2 uv : TEXCOORD0,
+                         float4 position : POSITION, 
+                         float3 normal   : NORMAL,
+                 //vert shader input
+ 
+                         uniform float4 lightPosition,
+             uniform float3 eyePosition,
+                 //both in object space
+ 
+                         uniform float4x4 worldviewproj, 
+ 
+                         out float4 oClipPos    : POSITION,
+                 //pass to clipping
+ 
+             out float4 oPos    : TEXCOORD0,
+             out float3 oNorm    : TEXCOORD1,
+                         out float4 oLightPos    : TEXCOORD2,            
+             out float3 oEyePos    : TEXCOORD3,
+                        //ADDED BY EUGEN - support for texture with the per pixel lighting
+                        out float2 oUv       : TEXCOORD4
+                 //pass to frag shader
+              ) 
+ { 
+     oClipPos = mul(worldviewproj, position); 
+ 
+     oPos = position;
+     oNorm     = normal; 
+     oLightPos = lightPosition;
+     oEyePos = eyePosition;
+        //ADDED BY EUGEN - support for texture with the per pixel lighting
+        oUv = uv;
+ 
+         //Remarks:
+ 
+         //since we want exact calculations in every case,
+         //calculate light and eye directions in frag shader,
+         //don't let the rasterizer interpolate them from here
+ 
+         //more costy than doing directions here, per-vertex, but
+         //produces accurate lighting in VERY low tessellation cases,
+         //light close to surface (for.ex. closer than poly size)
+ } 
+ 
+float3 expand(float3 v)
+{
+      return (v-0.5) * 2.0;
+}
+
+ void Simple_PerPixel_Frag(
+ 
+                  float4 pos         : TEXCOORD0,
+             float3 normal        : TEXCOORD1, 
+              float4 lightpos        : TEXCOORD2,
+             float3 eyepos        : TEXCOORD3,
+                        //ADDED BY EUGEN - support for texture with the per pixel lighting
+                        float2 uv        : TEXCOORD4,
+ 
+             uniform float4 lightDiffuse,
+             uniform float4 lightSpecular,
+             uniform float exponent,
+ 
+             uniform float4 ambient,
+             uniform sampler2D texture,
+ 
+                         out float4 oColor : COLOR 
+ ) 
+ {
+     float3 N = normalize(normal);
+ 
+         //Remarks: 
+ 
+         //we could do this normalize() in vert shader, or skip it
+         //see some info at lighthouse3d GLSL explanations    
+ 
+     float3 EyeDir = normalize(eyepos - pos.xyz);
+     float3 LightDir = normalize(lightpos.xyz -  (pos * lightpos.w));
+     float3 HalfAngle = normalize(LightDir + EyeDir);
+ 
+     float NdotL = dot(LightDir, N);
+     float NdotH = dot(HalfAngle, N);
+     float4 Lit = lit(NdotL,NdotH,exponent);
+ 
+     //cg docs say using their lit function is the fastest
+ 
+        //ADDED BY EUGEN - support for texture with the per pixel lighting
+        float3 textColour = expand(tex2D(texture, uv).xyz);
+ 
+        //ADDED BY EUGEN - support for texture with the per pixel lighting
+        oColor = lightDiffuse * Lit.y + lightSpecular * Lit.z + ambient + float4(textColour, 1);
+ }
+ 

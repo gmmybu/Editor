@@ -1,0 +1,62 @@
+vertex_program CustomShadowMap/ShadowCasterVP cg
+{
+    source CustomShadowMap.cg
+    entry_point casterVP
+    profiles arbvp1
+ 
+    default_params
+    {
+        param_named_auto p_ModelViewProjection worldviewproj_matrix
+        param_named_auto p_AmbientLight ambient_light_colour
+    }
+}
+ 
+fragment_program CustomShadowMap/ShadowCasterFP cg
+{
+    source CustomShadowMap.cg
+    entry_point casterFP
+    profiles arbfp1
+    // Store normalized (usefull to avoid overflowin) or non-normalized depth ?
+    //compile_arguments -DSTORE_NORMALIZED_DEPTH
+ 
+    default_params
+    {
+        // Only used when storing normalized depth values
+        //param_named_auto p_Near near_clip_distance
+        //param_named_auto p_Far far_clip_distance
+        param_named p_DepthOffset float 0.01
+    }
+}
+ 
+material CustomShadowMap/ShadowCaster
+{
+    technique default
+    {
+        // Z-write only pass
+        pass Z-write
+        {
+            vertex_program_ref CustomShadowMap/ShadowCasterVP
+            {
+            }
+            fragment_program_ref CustomShadowMap/ShadowCasterFP
+            {
+            }
+        }
+    }
+}
+
+material CustomShadowMap/ShadowReceiver
+{
+    technique default
+    {
+        pass lighting
+        {
+            texture_unit ShadowMap
+            {
+                content_type shadow
+                tex_address_mode clamp
+                filtering none
+            }
+        }
+    }
+}

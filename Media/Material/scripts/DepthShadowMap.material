@@ -1,0 +1,210 @@
+vertex_program DepthShadowMap/CasterVP cg
+{
+    source DepthShadowMap.cg
+    entry_point casterVP
+    profiles arbvp1 vs_2_0
+ 
+    compile_arguments -DLINEAR_RANGE=0
+ 
+    default_params
+    {
+        param_named_auto worldViewProj worldviewproj_matrix
+        param_named_auto texelOffsets texel_offsets
+        // param_named_auto depthRange scene_depth_range
+    }
+}
+ 
+fragment_program DepthShadowMap/CasterFP cg
+{
+    source DepthShadowMap.cg
+    entry_point casterFP
+    profiles arbfp1 ps_2_0 fp20
+ 
+    compile_arguments -DLINEAR_RANGE=0
+ 
+    default_params
+    {
+    }
+}
+ 
+vertex_program DepthShadowMap/ReceiverVP cg
+{
+    source DepthShadowMap.cg
+    entry_point receiverVP
+    profiles arbvp1 vs_2_0
+ 
+    compile_arguments -DLINEAR_RANGE=0
+ 
+    default_params
+    {
+        param_named_auto world world_matrix
+        param_named_auto worldIT inverse_transpose_world_matrix
+        param_named_auto worldViewProj worldviewproj_matrix
+        param_named_auto texViewProj texture_viewproj_matrix
+        param_named_auto lightPosition light_position 0
+        param_named_auto lightColour light_diffuse_colour 0
+        // param_named_auto shadowDepthRange shadow_scene_depth_range 0
+    }
+}
+ 
+fragment_program DepthShadowMap/ReceiverFP cg
+{
+    source DepthShadowMap.cg
+    entry_point receiverFP
+    profiles arbfp1 ps_2_0 fp20
+ 
+    compile_arguments -DLINEAR_RANGE=0 -DFUZZY_TEST=0 -DPCF=0
+ 
+    default_params
+    {
+        param_named inverseShadowmapSize float 0.0009765625
+        param_named fixedDepthBias float 0.01
+        param_named gradientClamp float 0.0098
+        param_named gradientScaleBias float 0
+        // param_named shadowFuzzyWidth float 1
+    }
+}
+ 
+// A really basic ambient pass program, support for one texture coodinate set
+vertex_program BasicVertexPrograms/AmbientOneTexture cg
+{
+    source DepthShadowMap.cg
+    entry_point ambientOneTexture_vp
+    profiles arbvp1 vs_1_1
+ 
+    default_params
+    {
+        param_named_auto worldViewProj worldviewproj_matrix
+        param_named_auto ambient ambient_light_colour
+    }
+}
+
+// Generic Shadow caster material (floating point shadowmap)
+material DepthShadowMap/Caster/Float
+{
+    technique
+    {
+        pass 
+        {
+            vertex_program_ref DepthShadowMap/CasterVP
+            {
+            }
+            fragment_program_ref DepthShadowMap/CasterFP
+            {
+            }
+        }
+    }
+}
+ 
+// Basic materials which support shadows as a seperate scheme
+material DepthShadowMap/BasicTemplateMaterial
+{
+    // This technique supports dynamic shadows
+    technique
+    {
+        // Base ambient pass
+        pass Ambient
+        {
+            // base colours, not needed for rendering, but as information
+            // to lighting pass categorisation routine
+            ambient 1 1 1
+            diffuse 0 0 0 
+            specular 0 0 0 0 
+            // Really basic vertex program
+            vertex_program_ref BasicVertexPrograms/AmbientOneTexture
+            {
+            }
+        }
+        // Now do the lighting pass
+        // NB we don't do decal texture here because this is repeated per light
+        pass Lighting
+        {
+            // base colours, not needed for rendering, but as information
+            // to lighting pass categorisation routine
+            ambient 0 0 0 
+ 
+            // do this for each light
+            iteration once_per_light
+ 
+            scene_blend add
+ 
+            // Vertex program reference
+            vertex_program_ref DepthShadowMap/ReceiverVP
+            {
+            }
+ 
+            // Fragment program
+            fragment_program_ref DepthShadowMap/ReceiverFP
+            {
+            }
+ 
+            texture_unit
+            {
+                content_type shadow
+                //tex_address_mode clamp
+                tex_address_mode border
+                tex_border_colour 1.0 1.0 1.0 0.0
+                filtering none
+                //filtering linear linear none        
+                //tex_coord_set 0
+            }
+        }
+
+        // Decal pass
+        pass Decal
+        {
+            // base colours, not needed for rendering, but as information
+            // to lighting pass categorisation routine
+            lighting off
+            // Really basic vertex program
+            vertex_program_ref BasicVertexPrograms/AmbientOneTexture
+            {
+                param_named ambient float4 1 1 1 1
+            }
+            scene_blend modulate
+ 
+            texture_unit
+            {
+                texture_alias MainTexture
+                //tex_address_mode border
+                //tex_border_colour 1.0 1.0 1.0 0.0
+            }
+        }
+    }
+}
+
+material Ninja
+//: DepthShadowMap/BasicTemplateMaterial
+{
+    //set_texture_alias MainTexture nskingr.jpg
+    technique
+    {
+        pass
+        {
+            texture_unit
+            {
+                texture nskingr.jpg
+            }
+        }
+    }
+}
+
+material Rockwall : DepthShadowMap/BasicTemplateMaterial
+{
+    set_texture_alias MainTexture rockwall.tga
+}
+
+/*material Rockwall
+{
+    technique
+    {
+        pass
+        {
+            texture_unit
+            {
+                texture rockwall.tga
+            }
+        }
+    }
+}
+*/

@@ -1,0 +1,14 @@
+material Test
+{
+	technique
+    {
+		pass
+        {
+			lighting off
+			texture_unit
+            {
+				texture nskingr.jpg
+            }
+        }
+    }
+}

@@ -1,0 +1,44 @@
+
+material tree5_skin1
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.752941 0.752941 0.752941 1
+			diffuse 0.752941 0.752941 0.752941 1
+			specular 0 0 0 1 40
+			scene_blend alpha_blend
+			alpha_rejection greater 128
+
+			texture_unit
+			{
+				texture t5_b.bmp -1
+			}
+		}
+
+	}
+
+}
+
+material tree5_skin2
+{
+	technique
+	{
+		pass
+		{
+			ambient 0.752941 0.752941 0.752941 1
+			diffuse 0.752941 0.752941 0.752941 1
+			specular 0 0 0 1 40
+			scene_blend alpha_blend
+			alpha_rejection greater 128
+
+			texture_unit
+			{
+				texture t5_c.tga -1
+			}
+		}
+
+	}
+
+}

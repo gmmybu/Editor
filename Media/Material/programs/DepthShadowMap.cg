@@ -1,0 +1,164 @@
+struct CasterVPInput
+{
+	float4 position : POSITION;
+};
+
+struct CasterVPOutput
+{
+	float4 position : POSITION;
+    float2 depth : TEXCOORD0;
+};
+
+void casterVP(
+	CasterVPInput input,
+    out CasterVPOutput output,
+    uniform float4x4 worldViewProj,
+    uniform float4 texelOffsets,
+    uniform float4 depthRange)
+{
+    output.position = mul(worldViewProj, input.position);
+ 
+    // fix pixel / texel alignment
+    output.position.xy += texelOffsets.zw * output.position.w;
+    // linear depth storage
+    // offset / scale range output
+#if LINEAR_RANGE
+    output.depth.x = (output.position.z - depthRange.x) * depthRange.w;
+#else
+    output.depth.x = output.position.z;
+#endif
+    output.depth.y = output.position.w;
+}
+
+void casterFP(
+    CasterVPOutput input,
+    out float4 color : COLOR)
+{
+#if LINEAR_RANGE
+    float finalDepth = input.depth.x;
+#else
+    float finalDepth = input.depth.x / input.depth.y;
+#endif
+    // just smear across all components 
+    // therefore this one needs high individual channel precision
+    color = float4(finalDepth, finalDepth, finalDepth, 1);
+}
+
+struct ReceiverVPInput
+{
+	float4 position : POSITION;
+    float4 normal : NORMAL;
+};
+
+struct ReceiverVPOutput
+{
+	float4 position : POSITION;
+    float4 shadowUV : TEXCOORD0;
+	float4 color : COLOR;
+};
+
+void receiverVP(
+	ReceiverVPInput input,
+    out ReceiverVPOutput output,
+    uniform float4x4 world,
+    uniform float4x4 worldIT,
+    uniform float4x4 worldViewProj,
+    uniform float4x4 texViewProj,
+    uniform float4 lightPosition,
+    uniform float4 lightColour,
+    uniform float4 shadowDepthRange)
+{
+    float4 worldPos = mul(world, input.position);
+    output.position = mul(worldViewProj, input.position);
+ 
+    float3 worldNorm = mul(worldIT, input.normal).xyz;
+ 
+    // calculate lighting (simple vertex lighting)
+    float3 lightDir = normalize(
+        lightPosition.xyz -  (worldPos.xyz * lightPosition.w));
+ 
+    output.color = lightColour * max(dot(lightDir, worldNorm), 0.0);
+ 
+    // calculate shadow map coords
+    output.shadowUV = mul(texViewProj, worldPos);
+#if LINEAR_RANGE
+    // adjust by fixed depth bias, rescale into range
+    output.shadowUV.z = (output.shadowUV.z - shadowDepthRange.x) * shadowDepthRange.w;
+#endif
+}
+
+void receiverFP(
+    ReceiverVPOutput input,
+    uniform sampler2D shadowMap : register(s0),
+    uniform float inverseShadowmapSize,
+    uniform float fixedDepthBias,
+    uniform float gradientClamp,
+    uniform float gradientScaleBias,
+    uniform float shadowFuzzyWidth,
+    out float4 color : COLOR)
+{
+    // point on shadowmap
+#if LINEAR_RANGE
+    input.shadowUV.xy = input.shadowUV.xy / input.shadowUV.w;
+#else
+    input.shadowUV = input.shadowUV / input.shadowUV.w;
+#endif
+
+    float centerDepth = tex2D(shadowMap, input.shadowUV.xy).x;
+ 
+    // gradient calculation
+    float pixeloffset = inverseShadowmapSize;
+    float4 depths = float4(
+        tex2D(shadowMap, input.shadowUV.xy + float2(-pixeloffset, 0)).x,
+        tex2D(shadowMap, input.shadowUV.xy + float2(+pixeloffset, 0)).x,
+        tex2D(shadowMap, input.shadowUV.xy + float2(0, -pixeloffset)).x,
+        tex2D(shadowMap, input.shadowUV.xy + float2(0, +pixeloffset)).x);
+ 
+    float2 differences = abs( depths.yw - depths.xz );
+    float gradient = min(gradientClamp, max(differences.x, differences.y));
+    float gradientFactor = gradient * gradientScaleBias;
+ 
+    // visibility function
+    float depthAdjust = gradientFactor + (fixedDepthBias * centerDepth);
+    float finalCenterDepth = centerDepth + depthAdjust;
+ 
+    // shadowUV.z contains lightspace position of current object
+ 
+#if FUZZY_TEST
+    // fuzzy test - introduces some ghosting in result and doesn't appear to be needed?
+    //float visibility = saturate(1 + delta_z / (gradient * shadowFuzzyWidth));
+    float visibility = saturate(1 + (finalCenterDepth - input.shadowUV.z) * shadowFuzzyWidth * input.shadowUV.w);
+ 
+    color = input.color * visibility;
+#else
+    // hard test
+	#if PCF
+		// use depths from prev, calculate diff
+		depths += depthAdjust.xxxx;
+		float final = (finalCenterDepth > input.shadowUV.z) ? 1.0f : 0.0f;
+		final += (depths.x > input.shadowUV.z) ? 1.0f : 0.0f;
+		final += (depths.y > input.shadowUV.z) ? 1.0f : 0.0f;
+		final += (depths.z > input.shadowUV.z) ? 1.0f : 0.0f;
+		final += (depths.w > input.shadowUV.z) ? 1.0f : 0.0f;
+	 
+		final *= 0.2f;
+	 
+		color = float4(input.color.xyz * final, 1);
+	#else
+		color = (centerDepth > input.shadowUV.z) ? input.color : float4(0, 0, 0, 1);
+	#endif
+#endif
+}
+
+void ambientOneTexture_vp(float4 position : POSITION,
+                          float2 uv : TEXCOORD0,
+                          out float4 oPosition : POSITION,
+                          out float2 oUv : TEXCOORD0,
+                          out float4 color : COLOR,
+                          uniform float4x4 worldViewProj,
+                          uniform float4 ambient)
+{
+    oPosition = mul(worldViewProj, position);
+    oUv = uv;
+    color = ambient;
+}

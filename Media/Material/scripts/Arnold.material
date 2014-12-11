@@ -1,0 +1,71 @@
+vertex_program Simple_Perpixel_Vert cg 
+ { 
+       source ARNOLD.cg 
+ 
+       default_params 
+       { 
+                  param_named_auto lightPosition light_position_object_space 0
+         param_named_auto eyePosition camera_position_object_space
+ 
+                  param_named_auto worldviewproj worldviewproj_matrix
+       } 
+ 
+       entry_point Simple_Perpixel_Vert 
+       profiles vs_1_1 arbvp1 
+ } 
+ 
+ fragment_program Simple_PerPixel_Frag cg 
+ { 
+       source ARNOLD.cg 
+ 
+       default_params 
+       {
+                  param_named_auto lightDiffuse light_diffuse_colour 0
+         param_named_auto lightSpecular light_specular_colour 0
+ 
+         param_named exponent float 127
+             //VERY high value, to produce large highlights
+ 
+         param_named ambient float4 0.0 0.0 0.0 1.0
+             //faint environment lighting
+       } 
+ 
+       entry_point Simple_PerPixel_Frag
+       profiles ps_2_0 arbfp1
+ }
+ 
+ material Simple_Perpixel 
+ { 
+       technique 
+       {
+         // Base ambient pass, needing to avoid transparent artifacts
+         // at for.ex. knot mesh
+ //        pass
+ //        {    
+ //            vertex_program_ref Ambient
+ //            {
+ //            }
+ //        }
+         pass 
+         { 
+             // do this for each light
+ //            iteration once_per_light
+ //            scene_blend add
+ 
+                     vertex_program_ref Simple_Perpixel_Vert
+                     { 
+                     } 
+ 
+                     fragment_program_ref Simple_PerPixel_Frag
+                     { 
+                     } 
+                        //EUGEN - support for textures with the perpixel lighting
+                        texture_unit
+                        {
+                                //use your own texture here, this is just an example
+                                texture nskingr.jpg
+                        }
+              } 
+       } 
+ }
+ 
