@@ -1,0 +1,639 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{2a0be99f-a195-423d-ad1e-4a84a15eca89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TinyXML">
+      <UniqueIdentifier>{ae8eedf8-ca9a-4ea6-810d-d160f96304e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SkeletonEx">
+      <UniqueIdentifier>{391ed27c-50b4-42f3-acea-0b974bcf7bfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dialog">
+      <UniqueIdentifier>{bb0e98a3-7112-4afa-b84c-50927fe28011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockingWindow">
+      <UniqueIdentifier>{10b56d7b-a5e7-4776-9913-853713413887}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockingWindow\Common">
+      <UniqueIdentifier>{7c965916-6a49-4b61-8a9b-3d71c76e6e27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockingWindow\CameraWnd">
+      <UniqueIdentifier>{a2dd866b-0c55-478c-8231-a3ebcfe11416}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockingWindow\PropertyWnd">
+      <UniqueIdentifier>{1f982940-c810-46bb-9780-20c718707cbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockingWindow\ResourceManager">
+      <UniqueIdentifier>{61a503cc-830a-429d-9011-a36016502bfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockingWindow\ResourcePreview">
+      <UniqueIdentifier>{0763451c-a5bb-4c09-8653-d81d51e4db8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockingWindow\SceneResource">
+      <UniqueIdentifier>{bf99f97c-db0b-4128-bd52-df38bdc6077e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockingWindow\MiscEditWnd">
+      <UniqueIdentifier>{f22cbba8-9976-447a-963c-b8510455aea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockingWindow\MiscEditWnd\MiscEditSheet">
+      <UniqueIdentifier>{0a77ed94-5da7-4ae0-91ce-4da5dfa04cbe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockingWindow\MiscEditWnd\TerrainEditPage">
+      <UniqueIdentifier>{9f8224f7-6c17-430b-9a45-102c64362b60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockingWindow\MiscEditWnd\TexturePreviewPage">
+      <UniqueIdentifier>{cb22d8e7-4495-4825-95c6-40972135a735}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scintilla">
+      <UniqueIdentifier>{54bc526a-ebae-4f01-8ecc-3a0218060b89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockingWindow\MiscEditWnd\MaterialPreviewPage">
+      <UniqueIdentifier>{80dfe88a-b929-4eb6-a4a3-aafdcc95b1f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dialog\ScriptEditor">
+      <UniqueIdentifier>{a4f98098-268e-445b-8d17-dc0a08dd57a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dialog\NewScene">
+      <UniqueIdentifier>{59bdc989-0a0a-4f4d-a36c-24bed0ed5f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dialog\NewLight">
+      <UniqueIdentifier>{41a5dfe8-f95b-4033-a993-de8848cc2058}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dialog\Common">
+      <UniqueIdentifier>{e35ad358-fb17-4fb4-854a-efd06f237721}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DockingWindow\OutputWnd">
+      <UniqueIdentifier>{c130bb83-00b6-471c-8a05-ca09e7c8b242}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OgreXMLConverter">
+      <UniqueIdentifier>{c1533158-e859-4713-8ad2-ca770aab1d67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dialog\OgreXMLConverter">
+      <UniqueIdentifier>{9b42eb02-04af-42bc-be5c-2c7eecef7f8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Core\Entity">
+      <UniqueIdentifier>{7b2d9b76-b3f9-4236-a612-f6128b34f7e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Game">
+      <UniqueIdentifier>{b4a7dd8d-a007-4e4a-804e-425a7194e35a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Scene">
+      <UniqueIdentifier>{62de4670-af67-4fe6-aede-e749cdc47b8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Common">
+      <UniqueIdentifier>{d2ce5703-9e5d-490c-a0fe-c916c6b1a448}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Utils">
+      <UniqueIdentifier>{003d8965-7758-4298-9470-33ecc708b691}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Game\DeferredShading">
+      <UniqueIdentifier>{2e8ad220-c142-4aa3-8b50-cae5a54284d8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Editor.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="ChildFrm.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicModel.h">
+      <Filter>Core\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObject.h">
+      <Filter>Core\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticMesh.h">
+      <Filter>Core\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="SESkeletonEx.h">
+      <Filter>SkeletonEx</Filter>
+    </ClInclude>
+    <ClInclude Include="SESkeletonManagerEx.h">
+      <Filter>SkeletonEx</Filter>
+    </ClInclude>
+    <ClInclude Include="SESkeletonSerializerEx.h">
+      <Filter>SkeletonEx</Filter>
+    </ClInclude>
+    <ClInclude Include="Box.h">
+      <Filter>DockingWindow\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="RibbonBarEx.h">
+      <Filter>DockingWindow\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="RibbonPaletteButtonEx.h">
+      <Filter>DockingWindow\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="RibbonPaletteIconEx.h">
+      <Filter>DockingWindow\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraWnd.h">
+      <Filter>DockingWindow\CameraWnd</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertyWnd.h">
+      <Filter>DockingWindow\PropertyWnd</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>DockingWindow\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManagerTree.h">
+      <Filter>DockingWindow\ResourceManager</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourcePreview.h">
+      <Filter>DockingWindow\ResourcePreview</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneResource.h">
+      <Filter>DockingWindow\SceneResource</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneResourceTree.h">
+      <Filter>DockingWindow\SceneResource</Filter>
+    </ClInclude>
+    <ClInclude Include="MiscEditSheet.h">
+      <Filter>DockingWindow\MiscEditWnd\MiscEditSheet</Filter>
+    </ClInclude>
+    <ClInclude Include="MiscEditWnd.h">
+      <Filter>DockingWindow\MiscEditWnd</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturePreviewPage.h">
+      <Filter>DockingWindow\MiscEditWnd\TexturePreviewPage</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceLayerWidget.h">
+      <Filter>DockingWindow\MiscEditWnd\TerrainEditPage</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainEditPage.h">
+      <Filter>DockingWindow\MiscEditWnd\TerrainEditPage</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainLayerWidget.h">
+      <Filter>DockingWindow\MiscEditWnd\TerrainEditPage</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectEditHandler.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainBrush.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainEditHandler.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainManager.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneDoc.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneView.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ScintillaCtrl.h">
+      <Filter>Scintilla</Filter>
+    </ClInclude>
+    <ClInclude Include="ScintillaDocView.h">
+      <Filter>Scintilla</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialPreviewPage.h">
+      <Filter>DockingWindow\MiscEditWnd\MaterialPreviewPage</Filter>
+    </ClInclude>
+    <ClInclude Include="Liquid.h">
+      <Filter>Core\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="LiquidEditHandler.h">
+      <Filter>Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Core\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="GameDoc.h">
+      <Filter>Core\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameView.h">
+      <Filter>Core\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="NewLightDlg.h">
+      <Filter>Dialog\NewLight</Filter>
+    </ClInclude>
+    <ClInclude Include="NewSceneDlg.h">
+      <Filter>Dialog\NewScene</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureProp.h">
+      <Filter>Dialog\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturePopup.h">
+      <Filter>Dialog\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptEditorDlg.h">
+      <Filter>Dialog\ScriptEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Action.h">
+      <Filter>Dialog\ScriptEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptEditorModifyDlg.h">
+      <Filter>Dialog\ScriptEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputWnd.h">
+      <Filter>DockingWindow\OutputWnd</Filter>
+    </ClInclude>
+    <ClInclude Include="TinyXML\tinystr.h">
+      <Filter>TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="TinyXML\tinyxml.h">
+      <Filter>TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Core\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="OgreXMLConverter\OgreXMLMeshSerializer.h">
+      <Filter>OgreXMLConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="OgreXMLConverter\OgreXMLPrerequisites.h">
+      <Filter>OgreXMLConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="OgreXMLConverter\OgreXMLSkeletonSerializer.h">
+      <Filter>OgreXMLConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="OgreXMLConverterDlg.h">
+      <Filter>Dialog\OgreXMLConverter</Filter>
+    </ClInclude>
+    <ClInclude Include="StringUtils.h">
+      <Filter>Core\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MiscUtils.h">
+      <Filter>Core\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>Core\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterController.h">
+      <Filter>Core\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomWindowMessage.h">
+      <Filter>Core\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPump.h">
+      <Filter>Core\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderScene.h">
+      <Filter>Core\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderView.h">
+      <Filter>Core\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Roaming.h">
+      <Filter>Core\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialDoc.h">
+      <Filter>DockingWindow\MiscEditWnd\MaterialPreviewPage</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialView.h">
+      <Filter>DockingWindow\MiscEditWnd\MaterialPreviewPage</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredLightCP.h">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClInclude>
+    <ClInclude Include="DeferredShading.h">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClInclude>
+    <ClInclude Include="DLight.h">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClInclude>
+    <ClInclude Include="GBufferMaterialGenerator.h">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClInclude>
+    <ClInclude Include="GBufferSchemeHandler.h">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClInclude>
+    <ClInclude Include="GeomUtils.h">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClInclude>
+    <ClInclude Include="LightMaterialGenerator.h">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClInclude>
+    <ClInclude Include="ListenerFactoryLogic.h">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialGenerator.h">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClInclude>
+    <ClInclude Include="NullSchemeHandler.h">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedData.h">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClInclude>
+    <ClInclude Include="SSAOLogic.h">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClInclude>
+    <ClInclude Include="AmbientLight.h">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageCombinator.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DynamicModel.cpp">
+      <Filter>Core\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObject.cpp">
+      <Filter>Core\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticMesh.cpp">
+      <Filter>Core\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="SESkeletonEx.cpp">
+      <Filter>SkeletonEx</Filter>
+    </ClCompile>
+    <ClCompile Include="SESkeletonManagerEx.cpp">
+      <Filter>SkeletonEx</Filter>
+    </ClCompile>
+    <ClCompile Include="SESkeletonSerializerEx.cpp">
+      <Filter>SkeletonEx</Filter>
+    </ClCompile>
+    <ClCompile Include="Box.cpp">
+      <Filter>DockingWindow\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="RibbonBarEx.cpp">
+      <Filter>DockingWindow\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="RibbonPaletteButtonEx.cpp">
+      <Filter>DockingWindow\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="RibbonPaletteIconEx.cpp">
+      <Filter>DockingWindow\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraWnd.cpp">
+      <Filter>DockingWindow\CameraWnd</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertyWnd.cpp">
+      <Filter>DockingWindow\PropertyWnd</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>DockingWindow\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManagerTree.cpp">
+      <Filter>DockingWindow\ResourceManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcePreview.cpp">
+      <Filter>DockingWindow\ResourcePreview</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneResource.cpp">
+      <Filter>DockingWindow\SceneResource</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneResourceTree.cpp">
+      <Filter>DockingWindow\SceneResource</Filter>
+    </ClCompile>
+    <ClCompile Include="MiscEditSheet.cpp">
+      <Filter>DockingWindow\MiscEditWnd\MiscEditSheet</Filter>
+    </ClCompile>
+    <ClCompile Include="MiscEditWnd.cpp">
+      <Filter>DockingWindow\MiscEditWnd</Filter>
+    </ClCompile>
+    <ClCompile Include="TexturePreviewPage.cpp">
+      <Filter>DockingWindow\MiscEditWnd\TexturePreviewPage</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceLayerWidget.cpp">
+      <Filter>DockingWindow\MiscEditWnd\TerrainEditPage</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainEditPage.cpp">
+      <Filter>DockingWindow\MiscEditWnd\TerrainEditPage</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainLayerWidget.cpp">
+      <Filter>DockingWindow\MiscEditWnd\TerrainEditPage</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectEditHandler.cpp">
+      <Filter>Core\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainBrush.cpp">
+      <Filter>Core\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainEditHandler.cpp">
+      <Filter>Core\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneDoc.cpp">
+      <Filter>Core\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneView.cpp">
+      <Filter>Core\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ScintillaCtrl.cpp">
+      <Filter>Scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="ScintillaDocView.cpp">
+      <Filter>Scintilla</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialPreviewPage.cpp">
+      <Filter>DockingWindow\MiscEditWnd\MaterialPreviewPage</Filter>
+    </ClCompile>
+    <ClCompile Include="Liquid.cpp">
+      <Filter>Core\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="LiquidEditHandler.cpp">
+      <Filter>Core\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Core\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDoc.cpp">
+      <Filter>Core\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameView.cpp">
+      <Filter>Core\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="NewLightDlg.cpp">
+      <Filter>Dialog\NewLight</Filter>
+    </ClCompile>
+    <ClCompile Include="NewSceneDlg.cpp">
+      <Filter>Dialog\NewScene</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureProp.cpp">
+      <Filter>Dialog\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="TexturePopup.cpp">
+      <Filter>Dialog\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptEditorDlg.cpp">
+      <Filter>Dialog\ScriptEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Action.cpp">
+      <Filter>Dialog\ScriptEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptEditorModifyDlg.cpp">
+      <Filter>Dialog\ScriptEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputWnd.cpp">
+      <Filter>DockingWindow\OutputWnd</Filter>
+    </ClCompile>
+    <ClCompile Include="TinyXML\tinystr.cpp">
+      <Filter>TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="TinyXML\tinyxml.cpp">
+      <Filter>TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="TinyXML\tinyxmlerror.cpp">
+      <Filter>TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="TinyXML\tinyxmlparser.cpp">
+      <Filter>TinyXML</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Core\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="OgreXMLConverter\OgreXMLMeshSerializer.cpp">
+      <Filter>OgreXMLConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="OgreXMLConverter\OgreXMLSkeletonSerializer.cpp">
+      <Filter>OgreXMLConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="OgreXMLConverterDlg.cpp">
+      <Filter>Dialog\OgreXMLConverter</Filter>
+    </ClCompile>
+    <ClCompile Include="StringUtils.cpp">
+      <Filter>Core\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MiscUtils.cpp">
+      <Filter>Core\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ChildFrm.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraManager.cpp">
+      <Filter>Core\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterController.cpp">
+      <Filter>Core\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomWindowMessage.cpp">
+      <Filter>Core\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPump.cpp">
+      <Filter>Core\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderScene.cpp">
+      <Filter>Core\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderView.cpp">
+      <Filter>Core\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Roaming.cpp">
+      <Filter>Core\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialDoc.cpp">
+      <Filter>DockingWindow\MiscEditWnd\MaterialPreviewPage</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialView.cpp">
+      <Filter>DockingWindow\MiscEditWnd\MaterialPreviewPage</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainManager.cpp">
+      <Filter>Core\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="AmbientLight.cpp">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredLightCP.cpp">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredShading.cpp">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClCompile>
+    <ClCompile Include="DLight.cpp">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClCompile>
+    <ClCompile Include="GBufferMaterialGenerator.cpp">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClCompile>
+    <ClCompile Include="GBufferSchemeHandler.cpp">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClCompile>
+    <ClCompile Include="GeomUtils.cpp">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClCompile>
+    <ClCompile Include="LightMaterialGenerator.cpp">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialGenerator.cpp">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClCompile>
+    <ClCompile Include="SSAOLogic.cpp">
+      <Filter>Core\Game\DeferredShading</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageCombinator.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Editor.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\Editor.rc2">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\cursor1.cur">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Place.cur">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="res\Liquid.cur">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\EditorDoc.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\Editor.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ObjectEditToolBar.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ObjectEditToolBar_HC.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\DockingWindowIcons.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ResourcePreviewToolBar.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ResourceManagerTreeImages.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\SceneResourceTreeImages.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

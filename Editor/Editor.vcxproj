@@ -1,0 +1,298 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{CBC7AD35-BEBF-465C-8265-A068083385A0}</ProjectGuid>
+    <RootNamespace>Editor</RootNamespace>
+    <Keyword>MFCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;FREEIMAGE_LIB;TIXML_USE_STL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)TinyXML;$(ProjectDir)OgreXMLConverter;$(SolutionDir)Dependencies\BCG\include;$(SolutionDir)Dependencies\Scintilla\include;$(SolutionDir)Dependencies\OGRE\include;$(SolutionDir)Dependencies\OGRE\include\OGRE;$(SolutionDir)Dependencies\OGRE\boost;$(SolutionDir)Dependencies\OgreOpCode\include;$(SolutionDir)Dependencies\DirectX\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\BCG\lib;$(SolutionDir)Dependencies\OGRE\lib\$(Configuration);$(SolutionDir)Dependencies\OGRE\boost\lib;$(SolutionDir)Dependencies\OgreOpcode\lib;$(SolutionDir)Dependencies\DirectX\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OgreMain_d.lib;OgreTerrain_d.lib;OgreOpcode_d.lib;OIS_d.lib;FreeImage_d.lib;d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0804</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0804</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Action.h" />
+    <ClInclude Include="AmbientLight.h" />
+    <ClInclude Include="Box.h" />
+    <ClInclude Include="CameraManager.h" />
+    <ClInclude Include="CameraWnd.h" />
+    <ClInclude Include="ChildFrm.h" />
+    <ClInclude Include="CustomWindowMessage.h" />
+    <ClInclude Include="DeferredLightCP.h" />
+    <ClInclude Include="DeferredShading.h" />
+    <ClInclude Include="DLight.h" />
+    <ClInclude Include="DynamicModel.h" />
+    <ClInclude Include="Editor.h" />
+    <ClInclude Include="GameDoc.h" />
+    <ClInclude Include="GameView.h" />
+    <ClInclude Include="GBufferMaterialGenerator.h" />
+    <ClInclude Include="GBufferSchemeHandler.h" />
+    <ClInclude Include="GeomUtils.h" />
+    <ClInclude Include="ImageCombinator.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="LightMaterialGenerator.h" />
+    <ClInclude Include="Liquid.h" />
+    <ClInclude Include="LiquidEditHandler.h" />
+    <ClInclude Include="ListenerFactoryLogic.h" />
+    <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="MaterialDoc.h" />
+    <ClInclude Include="MaterialGenerator.h" />
+    <ClInclude Include="MaterialPreviewPage.h" />
+    <ClInclude Include="MaterialView.h" />
+    <ClInclude Include="MiscEditSheet.h" />
+    <ClInclude Include="MiscEditWnd.h" />
+    <ClInclude Include="MiscUtils.h" />
+    <ClInclude Include="NewLightDlg.h" />
+    <ClInclude Include="NewSceneDlg.h" />
+    <ClInclude Include="NullSchemeHandler.h" />
+    <ClInclude Include="ObjectEditHandler.h" />
+    <ClInclude Include="OgreXMLConverterDlg.h" />
+    <ClInclude Include="OgreXMLConverter\OgreXMLMeshSerializer.h" />
+    <ClInclude Include="OgreXMLConverter\OgreXMLPrerequisites.h" />
+    <ClInclude Include="OgreXMLConverter\OgreXMLSkeletonSerializer.h" />
+    <ClInclude Include="OutputWnd.h" />
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="PropertyWnd.h" />
+    <ClInclude Include="RenderPump.h" />
+    <ClInclude Include="RenderScene.h" />
+    <ClInclude Include="RenderView.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="ResourceLayerWidget.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="ResourceManagerTree.h" />
+    <ClInclude Include="ResourcePreview.h" />
+    <ClInclude Include="RibbonBarEx.h" />
+    <ClInclude Include="RibbonPaletteButtonEx.h" />
+    <ClInclude Include="RibbonPaletteIconEx.h" />
+    <ClInclude Include="Roaming.h" />
+    <ClInclude Include="SceneDoc.h" />
+    <ClInclude Include="SceneObject.h" />
+    <ClInclude Include="SceneResource.h" />
+    <ClInclude Include="SceneResourceTree.h" />
+    <ClInclude Include="SceneView.h" />
+    <ClInclude Include="ScintillaCtrl.h" />
+    <ClInclude Include="ScintillaDocView.h" />
+    <ClInclude Include="ScriptEditorDlg.h" />
+    <ClInclude Include="ScriptEditorModifyDlg.h" />
+    <ClInclude Include="SESkeletonEx.h" />
+    <ClInclude Include="SESkeletonManagerEx.h" />
+    <ClInclude Include="SESkeletonSerializerEx.h" />
+    <ClInclude Include="CharacterController.h" />
+    <ClInclude Include="SharedData.h" />
+    <ClInclude Include="SSAOLogic.h" />
+    <ClInclude Include="StaticMesh.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StringUtils.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="TerrainBrush.h" />
+    <ClInclude Include="TerrainEditHandler.h" />
+    <ClInclude Include="TerrainEditPage.h" />
+    <ClInclude Include="TerrainLayerWidget.h" />
+    <ClInclude Include="TerrainManager.h" />
+    <ClInclude Include="TexturePopup.h" />
+    <ClInclude Include="TexturePreviewPage.h" />
+    <ClInclude Include="TextureProp.h" />
+    <ClInclude Include="TinyXML\tinystr.h" />
+    <ClInclude Include="TinyXML\tinyxml.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Action.cpp" />
+    <ClCompile Include="AmbientLight.cpp" />
+    <ClCompile Include="Box.cpp" />
+    <ClCompile Include="CameraManager.cpp" />
+    <ClCompile Include="CameraWnd.cpp" />
+    <ClCompile Include="CharacterController.cpp" />
+    <ClCompile Include="ChildFrm.cpp" />
+    <ClCompile Include="CustomWindowMessage.cpp" />
+    <ClCompile Include="DeferredLightCP.cpp" />
+    <ClCompile Include="DeferredShading.cpp" />
+    <ClCompile Include="DLight.cpp" />
+    <ClCompile Include="DynamicModel.cpp" />
+    <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="GameDoc.cpp" />
+    <ClCompile Include="GameView.cpp" />
+    <ClCompile Include="GBufferMaterialGenerator.cpp" />
+    <ClCompile Include="GBufferSchemeHandler.cpp" />
+    <ClCompile Include="GeomUtils.cpp" />
+    <ClCompile Include="ImageCombinator.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="LightMaterialGenerator.cpp" />
+    <ClCompile Include="Liquid.cpp" />
+    <ClCompile Include="LiquidEditHandler.cpp" />
+    <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="MaterialDoc.cpp" />
+    <ClCompile Include="MaterialGenerator.cpp" />
+    <ClCompile Include="MaterialPreviewPage.cpp" />
+    <ClCompile Include="MaterialView.cpp" />
+    <ClCompile Include="MiscEditSheet.cpp" />
+    <ClCompile Include="MiscEditWnd.cpp" />
+    <ClCompile Include="MiscUtils.cpp" />
+    <ClCompile Include="NewLightDlg.cpp" />
+    <ClCompile Include="NewSceneDlg.cpp" />
+    <ClCompile Include="ObjectEditHandler.cpp" />
+    <ClCompile Include="OgreXMLConverterDlg.cpp" />
+    <ClCompile Include="OgreXMLConverter\OgreXMLMeshSerializer.cpp" />
+    <ClCompile Include="OgreXMLConverter\OgreXMLSkeletonSerializer.cpp" />
+    <ClCompile Include="OutputWnd.cpp" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="PropertyWnd.cpp" />
+    <ClCompile Include="RenderPump.cpp" />
+    <ClCompile Include="RenderScene.cpp" />
+    <ClCompile Include="RenderView.cpp" />
+    <ClCompile Include="ResourceLayerWidget.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="ResourceManagerTree.cpp" />
+    <ClCompile Include="ResourcePreview.cpp" />
+    <ClCompile Include="RibbonBarEx.cpp" />
+    <ClCompile Include="RibbonPaletteButtonEx.cpp" />
+    <ClCompile Include="RibbonPaletteIconEx.cpp" />
+    <ClCompile Include="Roaming.cpp" />
+    <ClCompile Include="SceneDoc.cpp" />
+    <ClCompile Include="SceneObject.cpp" />
+    <ClCompile Include="SceneResource.cpp" />
+    <ClCompile Include="SceneResourceTree.cpp" />
+    <ClCompile Include="SceneView.cpp" />
+    <ClCompile Include="ScintillaCtrl.cpp" />
+    <ClCompile Include="ScintillaDocView.cpp" />
+    <ClCompile Include="ScriptEditorDlg.cpp" />
+    <ClCompile Include="ScriptEditorModifyDlg.cpp" />
+    <ClCompile Include="SESkeletonEx.cpp" />
+    <ClCompile Include="SESkeletonManagerEx.cpp" />
+    <ClCompile Include="SESkeletonSerializerEx.cpp" />
+    <ClCompile Include="SSAOLogic.cpp" />
+    <ClCompile Include="StaticMesh.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="StringUtils.cpp" />
+    <ClCompile Include="TerrainBrush.cpp" />
+    <ClCompile Include="TerrainEditHandler.cpp" />
+    <ClCompile Include="TerrainEditPage.cpp" />
+    <ClCompile Include="TerrainLayerWidget.cpp" />
+    <ClCompile Include="TerrainManager.cpp" />
+    <ClCompile Include="TexturePopup.cpp" />
+    <ClCompile Include="TexturePreviewPage.cpp" />
+    <ClCompile Include="TextureProp.cpp" />
+    <ClCompile Include="TinyXML\tinystr.cpp" />
+    <ClCompile Include="TinyXML\tinyxml.cpp" />
+    <ClCompile Include="TinyXML\tinyxmlerror.cpp" />
+    <ClCompile Include="TinyXML\tinyxmlparser.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Editor.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\cursor1.cur" />
+    <None Include="res\Editor.rc2" />
+    <None Include="res\Liquid.cur" />
+    <None Include="res\Place.cur" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\DockingWindowIcons.bmp" />
+    <Image Include="res\Editor.ico" />
+    <Image Include="res\EditorDoc.ico" />
+    <Image Include="res\ObjectEditToolBar.bmp" />
+    <Image Include="res\ObjectEditToolBar_HC.bmp" />
+    <Image Include="res\ResourceManagerTreeImages.bmp" />
+    <Image Include="res\ResourcePreviewToolBar.bmp" />
+    <Image Include="res\SceneResourceTreeImages.bmp" />
+    <Image Include="res\Toolbar.bmp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="Editor.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
