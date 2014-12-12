@@ -26,11 +26,11 @@ CObjectEditHandler::CObjectEditHandler(SceneDoc *Owner)
 	mObjectEditNode = mOwner->getSceneManager()->getRootSceneNode()->createChildSceneNode();
 	mRayQuery = mOwner->getSceneManager()->createRayQuery(Ogre::Ray());
 
-	mMaterials[0] = Ogre::MaterialManager::getSingletonPtr()->getByName("OgreSE/RedMat");
-	mMaterials[1] = Ogre::MaterialManager::getSingletonPtr()->getByName("OgreSE/GreenMat");
-	mMaterials[2] = Ogre::MaterialManager::getSingletonPtr()->getByName("OgreSE/BlueMat");
-	mMaterials[3] = Ogre::MaterialManager::getSingletonPtr()->getByName("OgreSE/ObjectIndicatorWhiteMat");
-	mMaterials[4] = Ogre::MaterialManager::getSingletonPtr()->getByName("OgreSE/ObjectIndicatorYellowMat");
+	mMaterials[0] = Ogre::MaterialManager::getSingletonPtr()->getByName("Editor/RedMat");
+	mMaterials[1] = Ogre::MaterialManager::getSingletonPtr()->getByName("Editor/GreenMat");
+	mMaterials[2] = Ogre::MaterialManager::getSingletonPtr()->getByName("Editor/BlueMat");
+	mMaterials[3] = Ogre::MaterialManager::getSingletonPtr()->getByName("Editor/ObjectIndicatorWhiteMat");
+	mMaterials[4] = Ogre::MaterialManager::getSingletonPtr()->getByName("Editor/ObjectIndicatorYellowMat");
 
 	//////////////////////////////////////////////////
 	// Åö×²¼ì²â

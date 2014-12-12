@@ -118,13 +118,12 @@ BEGIN
     BUTTON      ID_ADD_LIGHT
     SEPARATOR
     BUTTON      ID_OBJECT_PASTE
-    BUTTON      ID_OBJECT_MIDDLE
+    BUTTON      ID_SHOW_DEBUG_OVERLAY
 END
 
 IDR_RESOURCE_PREVIEW TOOLBAR 16, 15
 BEGIN
     BUTTON      ID_SHOW_GRID
-    BUTTON      ID_ANIM_LIST
 END
 
 
@@ -147,6 +146,11 @@ BEGIN
     BEGIN
         MENUITEM "工具栏",                         ID_VIEW_TOOLBAR
         MENUITEM "状态栏",                         ID_VIEW_STATUS_BAR
+    END
+    POPUP "技术"
+    BEGIN
+        MENUITEM "Deferred Shading",            ID_DEFERRED_SHADING
+        MENUITEM "Shadow",                      ID_32811
     END
     POPUP "测试"
     BEGIN

@@ -215,6 +215,7 @@
 #define ID_ADD_LIGHT                    32786
 #define ID_OBJECT_PASTE                 32789
 #define ID_OBJECT_MIDDLE                32790
+#define ID_SHOW_DEBUG_OVERLAY           32790
 #define ID_NEW_GAME                     32791
 #define ID_SCRIPT_EDITOR                32793
 #define ID_ANIM_LIST                    32794
@@ -226,13 +227,16 @@
 #define ID_NEW_SCENE                    32806
 #define ID_32808                        32808
 #define ID_IMAGE_COMBINATOR             32809
+#define ID_32810                        32810
+#define ID_32811                        32811
+#define ID_DEFERRED_SHADING             32812
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        337
-#define _APS_NEXT_COMMAND_VALUE         32810
+#define _APS_NEXT_COMMAND_VALUE         32813
 #define _APS_NEXT_CONTROL_VALUE         1100
 #define _APS_NEXT_SYMED_VALUE           316
 #endif

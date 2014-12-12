@@ -119,62 +119,114 @@ void CTerrainBrush::Roaming(Ogre::Vector3 Center)
 	if(CTerrainEditPage::Current->GetTerrain() == NULL)
 		return;
 
-	int BrushWorldSize = mOwner->getTerrainManagerConfig()->WorldSize / 
+	int brushWorldSize = mOwner->getTerrainManagerConfig()->WorldSize / 
 		mOwner->getTerrainManagerConfig()->TerrainSize * mSize;
+	float inverseSize = 1.0f / brushWorldSize;
 
 	POINT LeftTop;
-	LeftTop.x = Center.x - BrushWorldSize/2;
-	LeftTop.y = Center.z - BrushWorldSize/2;
+	LeftTop.x = Center.x - brushWorldSize/2;
+	LeftTop.y = Center.z - brushWorldSize/2;
 
-	size_t sectionIndex(0);
-	for(int i = 0; i <= BrushWorldSize; i += BrushWorldSize)
-	{
-		int posX = LeftTop.x + i;
-		mIndicator->beginUpdate(sectionIndex++);
-		for (int j = 0; j <= BrushWorldSize; j += BrushWorldSize)
-		{
-			int posZ = LeftTop.y + (int)j;
-			float TerrainHeight = CTerrainEditPage::Current->GetTerrain()->getHeightAtWorldPosition(
-				Ogre::Vector3(posX, 0, posZ));
-			float Height = TerrainHeight + 1.0f;
-			mIndicator->position(posX, Height, posZ);
-		}
-		mIndicator->end();
-	}
-	for (int j = 0; j <= BrushWorldSize; j += BrushWorldSize)
-	{
-		int posZ = LeftTop.y + (int)j;
-		mIndicator->beginUpdate(sectionIndex++);
-		for (int i = 0; i <= BrushWorldSize; i += BrushWorldSize)
-		{
-			int posX = LeftTop.x + (int)i;
-			float TerrainHeight = CTerrainEditPage::Current->GetTerrain()->getHeightAtWorldPosition(
-				Ogre::Vector3(posX, 0, posZ));
-			float Height = TerrainHeight + 1.0f;
-			mIndicator->position(posX, Height, posZ);
-		}
-		mIndicator->end();
-	}
+	// 网格
+	//size_t sectionIndex(0);
+	//for(int i = 0; i <= BrushWorldSize; i += BrushWorldSize)
+	//{
+	//	int posX = LeftTop.x + i;
+	//	mIndicator->beginUpdate(sectionIndex++);
+	//	for (int j = 0; j <= BrushWorldSize; j += BrushWorldSize)
+	//	{
+	//		int posZ = LeftTop.y + (int)j;
+	//		float TerrainHeight = CTerrainEditPage::Current->GetTerrain()->getHeightAtWorldPosition(
+	//			Ogre::Vector3(posX, 0, posZ));
+	//		float Height = TerrainHeight + 1.0f;
+	//		mIndicator->position(posX, Height, posZ);
+	//	}
+	//	mIndicator->end();
+	//}
+	//for (int j = 0; j <= BrushWorldSize; j += BrushWorldSize)
+	//{
+	//	int posZ = LeftTop.y + (int)j;
+	//	mIndicator->beginUpdate(sectionIndex++);
+	//	for (int i = 0; i <= BrushWorldSize; i += BrushWorldSize)
+	//	{
+	//		int posX = LeftTop.x + (int)i;
+	//		float TerrainHeight = CTerrainEditPage::Current->GetTerrain()->getHeightAtWorldPosition(
+	//			Ogre::Vector3(posX, 0, posZ));
+	//		float Height = TerrainHeight + 1.0f;
+	//		mIndicator->position(posX, Height, posZ);
+	//	}
+	//	mIndicator->end();
+	//}
+
+	// 刷子
+	mIndicator->beginUpdate(0);
+	mIndicator->position(LeftTop.x, 1.0f, LeftTop.y);
+	mIndicator->textureCoord(0, 0);
+
+	mIndicator->position(LeftTop.x, 1.0f, LeftTop.y + brushWorldSize);
+	mIndicator->textureCoord(0, 1.0f);
+
+	mIndicator->position(LeftTop.x + brushWorldSize, 1.0f, LeftTop.y);
+	mIndicator->textureCoord(1.0f, 0);
+
+	mIndicator->position(LeftTop.x + brushWorldSize, 1.0f, LeftTop.y + brushWorldSize);
+	mIndicator->textureCoord(1.0f, 1.0f);
+
+	mIndicator->index(1);
+	mIndicator->index(3);
+	mIndicator->index(2);
+
+	mIndicator->index(1);
+	mIndicator->index(2);
+	mIndicator->index(0);
+	mIndicator->end();
 }
 
 void CTerrainBrush::RebuildIndicator()
 {
-	int BrushWorldSize = mOwner->getTerrainManagerConfig()->WorldSize / 
+	int brushWorldSize = mOwner->getTerrainManagerConfig()->WorldSize / 
 		mOwner->getTerrainManagerConfig()->TerrainSize * mSize;
+	float inverseSize = 1.0f / brushWorldSize;
 
-	mIndicator->clear();	
-	for(int i = 0; i <= BrushWorldSize; i += BrushWorldSize)
-	{
-		mIndicator->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_STRIP);
-		for(int j = 0; j <= BrushWorldSize; j += BrushWorldSize)
-			mIndicator->position(i, 0, j);
-		mIndicator->end();
-	}
-	for(int j = 0; j <= BrushWorldSize; j  += BrushWorldSize)
-	{
-		mIndicator->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_STRIP);
-		for(int i = 0; i <= BrushWorldSize; i  += BrushWorldSize)
-			mIndicator->position(i, 0, j);
-		mIndicator->end();
-	}
+	// 网格
+	//mIndicator->clear();	
+	//for(int i = 0; i <= BrushWorldSize; i += BrushWorldSize)
+	//{
+	//	mIndicator->begin("Editor/BrushIndicatorMat", Ogre::RenderOperation::OT_LINE_STRIP);
+	//	for(int j = 0; j <= BrushWorldSize; j += BrushWorldSize)
+	//		mIndicator->position(i, 0, j);
+	//	mIndicator->end();
+	//}
+	//for(int j = 0; j <= BrushWorldSize; j  += BrushWorldSize)
+	//{
+	//	mIndicator->begin("Editor/BrushIndicatorMat", Ogre::RenderOperation::OT_LINE_STRIP);
+	//	for(int i = 0; i <= BrushWorldSize; i  += BrushWorldSize)
+	//		mIndicator->position(i, 0, j);
+	//	mIndicator->end();
+	//}
+
+	// 刷子
+	mIndicator->clear();
+	mIndicator->begin("Editor/BrushIndicatorMat", Ogre::RenderOperation::OT_TRIANGLE_LIST);
+
+	mIndicator->position(0, 1.0f, 0);
+	mIndicator->textureCoord(0, 0);
+
+	mIndicator->position(0, 1.0f, brushWorldSize);
+	mIndicator->textureCoord(0, 1.0f);
+
+	mIndicator->position(brushWorldSize, 1.0f, 0);
+	mIndicator->textureCoord(1.0f, 0);
+
+	mIndicator->position(brushWorldSize, 1.0f, brushWorldSize);
+	mIndicator->textureCoord(1.0f, 1.0f);
+
+	mIndicator->index(1);
+	mIndicator->index(3);
+	mIndicator->index(2);
+
+	mIndicator->index(1);
+	mIndicator->index(2);
+	mIndicator->index(0);
+	mIndicator->end();
 }

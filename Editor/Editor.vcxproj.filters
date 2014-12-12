@@ -99,6 +99,9 @@
     <Filter Include="Core\Game\DeferredShading">
       <UniqueIdentifier>{2e8ad220-c142-4aa3-8b50-cae5a54284d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Dialog\ImageCombinator">
+      <UniqueIdentifier>{afe25c14-8fc4-432d-99e6-307a06a2a800}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h">
@@ -348,7 +351,7 @@
       <Filter>Core\Game\DeferredShading</Filter>
     </ClInclude>
     <ClInclude Include="ImageCombinator.h">
-      <Filter>Editor</Filter>
+      <Filter>Dialog\ImageCombinator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -586,7 +589,9 @@
     <ClCompile Include="SSAOLogic.cpp">
       <Filter>Core\Game\DeferredShading</Filter>
     </ClCompile>
-    <ClCompile Include="ImageCombinator.cpp" />
+    <ClCompile Include="ImageCombinator.cpp">
+      <Filter>Dialog\ImageCombinator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Editor.rc">

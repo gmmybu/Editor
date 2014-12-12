@@ -57,7 +57,7 @@ void LiquidEditHandler::BeginEdit()
 		Ogre::NameValuePairList Params;
 		Params["mesh"] = "<LiquidIndicatorPlane>";
 		Ogre::Entity *PlaneEntity = (Ogre::Entity*)Factory->createInstance("<LiquidIndicatorPlane>", mOwner->getSceneManager(), &Params);
-		PlaneEntity->setMaterialName("OgreSE/LiquidIndicatorMat");
+		PlaneEntity->setMaterialName("Editor/LiquidIndicatorMat");
 		PlaneEntity->setCastShadows(false);
 		PlaneEntity->setQueryFlags(0);
 

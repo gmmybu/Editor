@@ -1,18 +1,14 @@
-// ImageCombinator.cpp : 实现文件
-//
-
 #include "stdafx.h"
 #include "Editor.h"
 #include "ImageCombinator.h"
-#include "afxdialogex.h"
-#include <fstream>
 #include "StringUtils.h"
+
 #include "OgreDataStream.h"
 #include "OgreImage.h"
+
 #include "d3d9.h"
 #include "d3dx9.h"
-
-// ImageCombinator 对话框
+#include <fstream>
 
 IMPLEMENT_DYNAMIC(ImageCombinator, CDialogEx)
 
@@ -43,7 +39,6 @@ void ImageCombinator::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT6, normalHeightPath);
 }
 
-
 BEGIN_MESSAGE_MAP(ImageCombinator, CDialogEx)
 	ON_BN_CLICKED(IDC_LOAD_DIFFUSE, &ImageCombinator::OnBnClickedLoadDiffuse)
 	ON_BN_CLICKED(IDC_LOAD_SPECULAR, &ImageCombinator::OnBnClickedLoadSpecular)
@@ -53,10 +48,6 @@ BEGIN_MESSAGE_MAP(ImageCombinator, CDialogEx)
 	ON_BN_CLICKED(IDC_SAVE_NORMAL_HEIGHT, &ImageCombinator::OnBnClickedSaveNormalHeight)
 	ON_BN_CLICKED(IDC_GENERATE, &ImageCombinator::OnBnClickedGenerate)
 END_MESSAGE_MAP()
-
-
-// ImageCombinator 消息处理程序
-
 
 void ImageCombinator::OnBnClickedLoadDiffuse()
 {
@@ -68,7 +59,6 @@ void ImageCombinator::OnBnClickedLoadDiffuse()
 	}
 }
 
-
 void ImageCombinator::OnBnClickedLoadSpecular()
 {
 	CFileDialog dlg(TRUE);
@@ -78,7 +68,6 @@ void ImageCombinator::OnBnClickedLoadSpecular()
 		UpdateData(FALSE);
 	}
 }
-
 
 void ImageCombinator::OnBnClickedSaveDiffuseSpecular()
 {
@@ -90,7 +79,6 @@ void ImageCombinator::OnBnClickedSaveDiffuseSpecular()
 	}
 }
 
-
 void ImageCombinator::OnBnClickedLoadNormal()
 {
 	CFileDialog dlg(TRUE);
@@ -100,7 +88,6 @@ void ImageCombinator::OnBnClickedLoadNormal()
 		UpdateData(FALSE);
 	}
 }
-
 
 void ImageCombinator::OnBnClickedLoadHeight()
 {
@@ -112,7 +99,6 @@ void ImageCombinator::OnBnClickedLoadHeight()
 	}
 }
 
-
 void ImageCombinator::OnBnClickedSaveNormalHeight()
 {
 	CFileDialog dlg(FALSE);
@@ -122,7 +108,6 @@ void ImageCombinator::OnBnClickedSaveNormalHeight()
 		UpdateData(FALSE);
 	}
 }
-
 
 void ImageCombinator::OnBnClickedGenerate()
 {
