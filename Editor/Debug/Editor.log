@@ -1,17 +1,4 @@
-﻿  TerrainBrush.cpp
-d:\neweditor\editor\terrainbrush.cpp(103): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
-d:\neweditor\editor\terrainbrush.cpp(104): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
-d:\neweditor\editor\terrainbrush.cpp(123): warning C4244: “初始化”: 从“Ogre::Real”转换到“int”，可能丢失数据
-d:\neweditor\editor\terrainbrush.cpp(127): warning C4244: “=”: 从“Ogre::Real”转换到“LONG”，可能丢失数据
-d:\neweditor\editor\terrainbrush.cpp(128): warning C4244: “=”: 从“Ogre::Real”转换到“LONG”，可能丢失数据
-d:\neweditor\editor\terrainbrush.cpp(190): warning C4244: “参数”: 从“LONG”转换到“Ogre::Real”，可能丢失数据
-d:\neweditor\editor\terrainbrush.cpp(193): warning C4244: “参数”: 从“LONG”转换到“Ogre::Real”，可能丢失数据
-d:\neweditor\editor\terrainbrush.cpp(196): warning C4244: “参数”: 从“LONG”转换到“Ogre::Real”，可能丢失数据
-d:\neweditor\editor\terrainbrush.cpp(199): warning C4244: “参数”: 从“LONG”转换到“Ogre::Real”，可能丢失数据
-d:\neweditor\editor\terrainbrush.cpp(215): warning C4244: “初始化”: 从“Ogre::Real”转换到“int”，可能丢失数据
-d:\neweditor\editor\terrainbrush.cpp(251): warning C4244: “参数”: 从“int”转换到“Ogre::Real”，可能丢失数据
-d:\neweditor\editor\terrainbrush.cpp(254): warning C4244: “参数”: 从“int”转换到“Ogre::Real”，可能丢失数据
-d:\neweditor\editor\terrainbrush.cpp(257): warning C4244: “参数”: 从“int”转换到“Ogre::Real”，可能丢失数据
+﻿  RenderPump.cpp
 Action.obj : warning LNK4075: 忽略“/EDITANDCONTINUE”(由于“/OPT:LBR”规范)
 FreeImage_d.lib(BitmapAccess.obj) : warning LNK4099: 未找到 PDB“vc110.pdb”(使用“FreeImage_d.lib(BitmapAccess.obj)”或在“D:\NewEditor\Debug\vc110.pdb”中寻找)；正在链接对象，如同没有调试信息一样
 FreeImage_d.lib(ColorLookup.obj) : warning LNK4099: 未找到 PDB“vc110.pdb”(使用“FreeImage_d.lib(ColorLookup.obj)”或在“D:\NewEditor\Debug\vc110.pdb”中寻找)；正在链接对象，如同没有调试信息一样

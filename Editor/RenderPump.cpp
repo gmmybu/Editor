@@ -14,7 +14,10 @@
 
 #include "OgreConfigFile.h"
 #include "OgreLogManager.h"
+#include "OgreRenderWindow.h"
 #include "OgreRoot.h"
+#include "Overlay\OgreOverlaySystem.h"
+#include "Overlay\OgreOverlayManager.h"
 #include "SESkeletonManagerEx.h"
 
 void LogListener::messageLogged( const Ogre::String& message, Ogre::LogMessageLevel lml, bool maskDebug, const Ogre::String &logName, bool& skipThisMessage )
@@ -27,6 +30,9 @@ RenderPump::RenderPump()
 {
 	current = this;
 	initialized = false;
+	root = NULL;
+	overlaySystem = NULL;
+	debugOverlay = NULL;
 }
 
 RenderPump::~RenderPump()
@@ -42,6 +48,7 @@ void RenderPump::initialize()
 	logManager->getLog("tmp.log")->setLogDetail(Ogre::LL_NORMAL);
 
 	root = OGRE_NEW Ogre::Root("plugins_d.cfg", "ogre.cfg", "tmp.log");
+	overlaySystem = OGRE_NEW Ogre::OverlaySystem();
 
 	// 为了正确加载天龙八部的骨骼文件
 	OGRE_DELETE Ogre::SkeletonManager::getSingletonPtr();
@@ -86,16 +93,56 @@ void RenderPump::renderOneFrame()
 	CMaterialPreviewPage::Current->update(Elapsed);
 	CResourcePreview::Current->update(Elapsed);
 	if(SceneDoc::current != NULL)
+	{
+		if(debugOverlay && debugOverlay->isVisible())
+		{
+			static std::string currFps = "Current FPS: ";
+			static std::string avgFps = "Average FPS: ";
+			static std::string bestFps = "Best FPS: ";
+			static std::string worstFps = "Worst FPS: ";
+			static std::string tris = "Triangle Count: ";
+			static std::string batches = "Batch Count: ";
+
+			Ogre::OverlayElement *guiAvg = Ogre::OverlayManager::getSingletonPtr()->getOverlayElement("Core/AverageFps");
+			Ogre::OverlayElement *guiCurr = Ogre::OverlayManager::getSingletonPtr()->getOverlayElement("Core/CurrFps");
+			Ogre::OverlayElement *guiBest = Ogre::OverlayManager::getSingletonPtr()->getOverlayElement("Core/BestFps");
+			Ogre::OverlayElement *guiWorst = Ogre::OverlayManager::getSingletonPtr()->getOverlayElement("Core/WorstFps");
+
+			const Ogre::RenderTarget::FrameStats& stats = SceneDoc::current->getActiveView()->getRenderWindow()->getStatistics();
+			guiAvg->setCaption(avgFps + Ogre::StringConverter::toString(stats.avgFPS));
+			guiCurr->setCaption(currFps + Ogre::StringConverter::toString(stats.lastFPS));
+			guiBest->setCaption(bestFps + Ogre::StringConverter::toString(stats.bestFPS)
+				+" "+Ogre::StringConverter::toString(stats.bestFrameTime)+" ms");
+			guiWorst->setCaption(worstFps + Ogre::StringConverter::toString(stats.worstFPS)
+				+" "+Ogre::StringConverter::toString(stats.worstFrameTime)+" ms");
+
+			Ogre::OverlayElement* guiTris = Ogre::OverlayManager::getSingletonPtr()->getOverlayElement("Core/NumTris");
+			guiTris->setCaption(tris + Ogre::StringConverter::toString(stats.triangleCount));
+
+			Ogre::OverlayElement* guiBatches = Ogre::OverlayManager::getSingletonPtr()->getOverlayElement("Core/NumBatches");
+			guiBatches->setCaption(batches + Ogre::StringConverter::toString(stats.batchCount));
+		}
 		SceneDoc::current->update(Elapsed);
+	}
 	if(CGameDoc::Current != NULL)
 		CGameDoc::Current->update(Elapsed);
+}
+
+void RenderPump::showDebugOverlay(bool show)
+{
+	if(!debugOverlay)
+		debugOverlay = Ogre::OverlayManager::getSingletonPtr()->getByName("Core/DebugOverlay");
+	if (show)
+		debugOverlay->show();
+	else
+		debugOverlay->hide();
 }
 
 void RenderPump::setupResources()
 {
 	Ogre::ConfigFile cf;
 #if OGRE_DEBUG_MODE
-    cf.load("OgreSE_resources_d.cfg");
+    cf.load("resources_d.cfg");
 #else
     cf.load("resources.cfg");
 #endif

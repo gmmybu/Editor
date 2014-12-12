@@ -27,7 +27,6 @@ public:
 
 	bool isGameMode() { return gameMode; }
 	bool isPaste() { return paste; }
-	bool isMiddle() { return middle; }
 
 	CString getSceneName() { return sceneName; }
 	void setSceneName(CString sceneName) { SetTitle(sceneName); this->sceneName = sceneName; }
@@ -83,13 +82,13 @@ public:
 	afx_msg void OnUpdateAddLight(CCmdUI *pCmdUI);
 	afx_msg void OnObjectPaste();
 	afx_msg void OnUpdateObjectPaste(CCmdUI *pCmdUI);
-	afx_msg void OnObjectMiddle();
-	afx_msg void OnUpdateObjectMiddle(CCmdUI *pCmdUI);
+	afx_msg void OnShowDebugOverlay();
+	afx_msg void OnUpdateShowDebugOverlay(CCmdUI *pCmdUI);
 	afx_msg void OnUpdateBrushMenu(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateTextureMenu(CCmdUI* pCmdUI);
 
 	int editMode;
-	bool gameMode; bool paste; bool middle;
+	bool gameMode; bool paste; bool showDebugOverlay;
 
 	bool initialized;
 	CString sceneName;

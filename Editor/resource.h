@@ -214,7 +214,6 @@
 #define ID_LIQUID_EDIT                  32784
 #define ID_ADD_LIGHT                    32786
 #define ID_OBJECT_PASTE                 32789
-#define ID_OBJECT_MIDDLE                32790
 #define ID_SHOW_DEBUG_OVERLAY           32790
 #define ID_NEW_GAME                     32791
 #define ID_SCRIPT_EDITOR                32793

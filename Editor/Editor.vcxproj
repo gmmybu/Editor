@@ -60,7 +60,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\BCG\lib;$(SolutionDir)Dependencies\OGRE\lib\$(Configuration);$(SolutionDir)Dependencies\OGRE\boost\lib;$(SolutionDir)Dependencies\OgreOpcode\lib;$(SolutionDir)Dependencies\DirectX\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>OgreMain_d.lib;OgreTerrain_d.lib;OgreOpcode_d.lib;OIS_d.lib;FreeImage_d.lib;d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain_d.lib;OgreOverlay_d.lib;OgreTerrain_d.lib;OgreOpcode_d.lib;OIS_d.lib;FreeImage_d.lib;d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
     <Midl>

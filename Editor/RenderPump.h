@@ -5,6 +5,12 @@
 
 class RenderView;
 
+namespace Ogre
+{
+	class OverlaySystem;
+	class Overlay;
+}
+
 class LogListener : public Ogre::LogListener
 {
 public:
@@ -17,14 +23,14 @@ public:
 	RenderPump();
 	~RenderPump();
 
-	bool isInitialized() { return initialized; }
-	void setInitialized(bool initialized) { this->initialized = initialized; }
+	Ogre::OverlaySystem *getOverlaySystem() { return overlaySystem; }
+	
+	void initialize();
+	void renderOneFrame();
+	void showDebugOverlay(bool show);
 
 	RenderView *getActiveView() { return roaming.getActiveView(); }
 	void setActiveView(RenderView *activeView) { roaming.setActiveView(activeView); }
-
-	void initialize();
-	void renderOneFrame();
 
 	static RenderPump *current;
 
@@ -33,6 +39,9 @@ private:
 	void loadConfig();
 
 	bool initialized;
-	Ogre::Root *root;
 	Roaming roaming;
+
+	Ogre::Root *root;
+	Ogre::OverlaySystem *overlaySystem;
+	Ogre::Overlay *debugOverlay;
 };

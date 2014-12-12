@@ -2,6 +2,7 @@
 #include "resource.h"
 #include "SceneDoc.h"
 #include "SceneView.h"
+#include "RenderPump.h"
 
 #include "DynamicModel.h"
 #include "Light.h"
@@ -25,6 +26,7 @@
 #include "Terrain\OgreTerrainGroup.h"
 #include "OgreShadowCameraSetupPSSM.h"
 #include "OgreGpuProgramManager.h"
+#include "Overlay\OgreOverlaySystem.h"
 #include "Terrain\OgreTerrainMaterialGeneratorA.h"
 
 #include "tinyxml.h"
@@ -34,19 +36,19 @@ IMPLEMENT_DYNCREATE(SceneDoc, CDocument)
 SceneDoc *SceneDoc::current = NULL;
 SceneDoc::SceneDoc()
 {
-	//editMode = 0;
-	//gameMode = false;
-	//paste = false;
-	//middle = false;
+	editMode = 0;
+	gameMode = false;
+	paste = false;
+	showDebugOverlay = false;
 
-	//initialized = FALSE;
-	//mActiveView = NULL;
-	//terrainEditHandler = NULL;
-	//objectEditHandler = NULL;
-	//liquidEditHandler = NULL;
-	//terrainManager = NULL;
+	initialized = false;
+	activeView = NULL;
+	terrainEditHandler = NULL;
+	objectEditHandler = NULL;
+	liquidEditHandler = NULL;
+	terrainManager = NULL;
 
-	//mNameID = 0;
+	nameID = 0;
 }
 
 SceneDoc::~SceneDoc()
@@ -59,6 +61,7 @@ void SceneDoc::initialize(CNewSceneDlg *Dlg)
 	SetTitle(sceneName);
 
 	sceneManager = Ogre::Root::getSingleton().createSceneManager(Ogre::ST_GENERIC); 
+	sceneManager->addRenderQueueListener(RenderPump::current->getOverlaySystem());
 
 	COLORREF refAmbientLight = Dlg->GetProperty(NSD_AMBIENT_LIGHT);
 	sceneManager->setAmbientLight(
@@ -185,6 +188,7 @@ void SceneDoc::initialize(CString Filename)
 	SetTitle(sceneName);
 
 	sceneManager = Ogre::Root::getSingleton().createSceneManager(Ogre::ST_GENERIC);
+	sceneManager->addRenderQueueListener(RenderPump::current->getOverlaySystem());
 
 	Ogre::ColourValue AmbientLight;
 	sscanf(Root->Attribute("AmbientLight"), "%f,%f,%f", &AmbientLight.r, &AmbientLight.g, &AmbientLight.b);
@@ -539,14 +543,14 @@ void SceneDoc::selectObject(SceneObject *pObject)
 		return;
 	}
 
-	if(middle)
-	{
-		Ogre::Vector3 camEnd;
-		float fRadius = pObject->getBoundingRadius();
-		float camToObject = (fRadius * 2 + camera->getNearClipDistance());
-		camEnd = pObject->getSceneNode()->getPosition() - camToObject * camera->getDerivedDirection();
-		camera->setPosition(camEnd);
-	}
+	//if(middle)
+	//{
+	//	Ogre::Vector3 camEnd;
+	//	float fRadius = pObject->getBoundingRadius();
+	//	float camToObject = (fRadius * 2 + camera->getNearClipDistance());
+	//	camEnd = pObject->getSceneNode()->getPosition() - camToObject * camera->getDerivedDirection();
+	//	camera->setPosition(camEnd);
+	//}
 
 	objectEditHandler->SetTarget(pObject);
 	objectEditHandler->SetMode(OEM_TRANS);
@@ -706,8 +710,8 @@ BEGIN_MESSAGE_MAP(SceneDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_ADD_LIGHT, OnUpdateAddLight)
 	ON_COMMAND(ID_OBJECT_PASTE, OnObjectPaste)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_PASTE, OnUpdateObjectPaste)
-	ON_COMMAND(ID_OBJECT_MIDDLE, OnObjectMiddle)
-	ON_UPDATE_COMMAND_UI(ID_OBJECT_MIDDLE, OnUpdateObjectMiddle)
+	ON_COMMAND(ID_SHOW_DEBUG_OVERLAY, OnShowDebugOverlay)
+	ON_UPDATE_COMMAND_UI(ID_SHOW_DEBUG_OVERLAY, OnUpdateShowDebugOverlay)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_LOAD_BRUSH, ID_RESIZE_BRUSH, OnUpdateBrushMenu)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_LOAD_TEXTURE, ID_RESIZE_TEXTURE, OnUpdateTextureMenu)
 	ON_COMMAND(ID_SAVE_SCENE, &SceneDoc::OnSaveScene)
@@ -1131,14 +1135,15 @@ void SceneDoc::OnUpdateObjectPaste(CCmdUI *pCmdUI)
 	pCmdUI->SetCheck(paste);
 }
 
-void SceneDoc::OnObjectMiddle()
+void SceneDoc::OnShowDebugOverlay()
 {
-	middle = !middle;
+	showDebugOverlay = !showDebugOverlay;
 }
 
-void SceneDoc::OnUpdateObjectMiddle(CCmdUI *pCmdUI)
+void SceneDoc::OnUpdateShowDebugOverlay(CCmdUI *pCmdUI)
 {
-	pCmdUI->SetCheck(middle);
+	pCmdUI->SetCheck(showDebugOverlay);
+	RenderPump::current->showDebugOverlay(showDebugOverlay);
 }
 
 void SceneDoc::OnUpdateBrushMenu(CCmdUI* pCmdUI)
