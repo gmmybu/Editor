@@ -1,17 +1,3 @@
-/*
------------------------------------------------------------------------------
-This source file is part of OGRE
-(Object-oriented Graphics Rendering Engine)
-For the latest info, see http://www.ogre3d.org/
-
-Copyright (c) 2000-2013 Torus Knot Software Ltd
-Also see acknowledgements in Readme.html
-
-You may use this sample code for anything you like, it is not covered by the
-same license as the rest of the engine.
------------------------------------------------------------------------------
-*/
-
 /**
 Implementation of a Deferred Shading engine in OGRE, using Multiple Render Targets and
 CG high level language shaders.
@@ -29,16 +15,12 @@ The wiki article explaining this demo can be found here :
   http://www.ogre3d.org/wiki/index.php/Deferred_Shading
 */
 
-#ifndef H_DeferredShadingSystem
-#define H_DeferredShadingSystem
+#pragma once
 
-#include "Ogre.h"
-// #include "SdkSample.h"
-
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-#define WIN32_LEAN_AND_MEAN
-#include "windows.h"
-#endif
+//#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+//#define WIN32_LEAN_AND_MEAN
+//#include "windows.h"
+//#endif
 
 #include "OgreCompositorInstance.h"
 #include "OgreSceneManager.h"
@@ -46,9 +28,6 @@ The wiki article explaining this demo can be found here :
 #include "OgreMaterial.h"
 #include "OgreRenderTargetListener.h"
 #include "GeomUtils.h"
-
-using namespace Ogre;
-// using namespace OgreBites;
 
 /** System to manage Deferred Shading for a camera/render target.
  *  @note With the changes to the compositor framework, this class just
@@ -110,7 +89,7 @@ protected:
 	bool mSSAO;
 
 	//Used to unregister compositor logics and free memory
-	typedef map<String, CompositorLogic*>::type CompositorLogicMap;
+	typedef Ogre::map<Ogre::String, Ogre::CompositorLogic*>::type CompositorLogicMap;
 	CompositorLogicMap mCompositorLogics;
 
 	void createResources();
@@ -118,9 +97,7 @@ protected:
 	void logCurrentMode(void);
 };
 
-const ColourValue SAMPLE_COLORS[] = 
-{   ColourValue::Red, ColourValue::Green, ColourValue::Blue, 
-    ColourValue::White, ColourValue(1,1,0,1), ColourValue(1,0,1,1)
+const Ogre::ColourValue SAMPLE_COLORS[] = 
+{   Ogre::ColourValue::Red, Ogre::ColourValue::Green, Ogre::ColourValue::Blue, 
+    Ogre::ColourValue::White, Ogre::ColourValue(1,1,0,1), Ogre::ColourValue(1,0,1,1)
 };
-
-#endif

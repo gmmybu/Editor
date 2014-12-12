@@ -96,11 +96,11 @@
     <Filter Include="Core\Utils">
       <UniqueIdentifier>{003d8965-7758-4298-9470-33ecc708b691}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Game\DeferredShading">
-      <UniqueIdentifier>{2e8ad220-c142-4aa3-8b50-cae5a54284d8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Dialog\ImageCombinator">
       <UniqueIdentifier>{afe25c14-8fc4-432d-99e6-307a06a2a800}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\DeferredShading">
+      <UniqueIdentifier>{2e8ad220-c142-4aa3-8b50-cae5a54284d8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -312,43 +312,40 @@
       <Filter>DockingWindow\MiscEditWnd\MaterialPreviewPage</Filter>
     </ClInclude>
     <ClInclude Include="DeferredLightCP.h">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClInclude>
     <ClInclude Include="DeferredShading.h">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClInclude>
     <ClInclude Include="DLight.h">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClInclude>
     <ClInclude Include="GBufferMaterialGenerator.h">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClInclude>
     <ClInclude Include="GBufferSchemeHandler.h">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClInclude>
     <ClInclude Include="GeomUtils.h">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClInclude>
     <ClInclude Include="LightMaterialGenerator.h">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClInclude>
     <ClInclude Include="ListenerFactoryLogic.h">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClInclude>
     <ClInclude Include="MaterialGenerator.h">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClInclude>
     <ClInclude Include="NullSchemeHandler.h">
-      <Filter>Core\Game\DeferredShading</Filter>
-    </ClInclude>
-    <ClInclude Include="SharedData.h">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClInclude>
     <ClInclude Include="SSAOLogic.h">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClInclude>
     <ClInclude Include="AmbientLight.h">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClInclude>
     <ClInclude Include="ImageCombinator.h">
       <Filter>Dialog\ImageCombinator</Filter>
@@ -560,34 +557,34 @@
       <Filter>Core\Scene</Filter>
     </ClCompile>
     <ClCompile Include="AmbientLight.cpp">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClCompile>
     <ClCompile Include="DeferredLightCP.cpp">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClCompile>
     <ClCompile Include="DeferredShading.cpp">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClCompile>
     <ClCompile Include="DLight.cpp">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClCompile>
     <ClCompile Include="GBufferMaterialGenerator.cpp">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClCompile>
     <ClCompile Include="GBufferSchemeHandler.cpp">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClCompile>
     <ClCompile Include="GeomUtils.cpp">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClCompile>
     <ClCompile Include="LightMaterialGenerator.cpp">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClCompile>
     <ClCompile Include="MaterialGenerator.cpp">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClCompile>
     <ClCompile Include="SSAOLogic.cpp">
-      <Filter>Core\Game\DeferredShading</Filter>
+      <Filter>Core\DeferredShading</Filter>
     </ClCompile>
     <ClCompile Include="ImageCombinator.cpp">
       <Filter>Dialog\ImageCombinator</Filter>

@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "GameView.h"
 #include "GameDoc.h"
-
-#include "SharedData.h"
 #include "OgreRenderWindow.h"
 
 IMPLEMENT_DYNCREATE(CGameView, RenderView)
@@ -61,12 +59,4 @@ void CGameView::OnDestroy()
 
 	((CGameDoc*)GetDocument())->Destroy();
 	CGameDoc::Current = NULL;
-}
-
-void CGameView::SetupView()
-{
-	RenderView::setupView();
-	CGameDoc *Doc = (CGameDoc*)GetDocument();
-	Doc->System = new DeferredShadingSystem(viewport, Doc->getSceneManager(), Doc->getCamera());
-	Doc->System->initialize();
 }

@@ -2,8 +2,6 @@
 
 #include "RenderScene.h"
 
-class DeferredShadingSystem;
-
 namespace Ogre
 {
 	class SceneManager;
@@ -23,13 +21,7 @@ public:
 
 	void update(float Elapsed);
 
-	DeferredShadingSystem *System;
 	static CGameDoc *Current;
 
 	DECLARE_MESSAGE_MAP()
-
-	void createAtheneScene(Ogre::SceneNode *rootNode);
-	void createSampleLights();
-	void createKnotScene(Ogre::SceneNode* rootNode);
-	void createObjects(Ogre::SceneNode* rootNode);
 };

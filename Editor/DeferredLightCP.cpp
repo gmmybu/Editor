@@ -1,35 +1,24 @@
-/*
------------------------------------------------------------------------------
-This source file is part of OGRE
-(Object-oriented Graphics Rendering Engine)
-For the latest info, see http://www.ogre3d.org/
-
-Copyright (c) 2000-2013 Torus Knot Software Ltd
-Also see acknowledgements in Readme.html
-
-You may use this sample code for anything you like, it is not covered by the
-same license as the rest of the engine.
------------------------------------------------------------------------------
-*/
-
 #include "stdafx.h"
 #include "DeferredLightCP.h"
 
-#include "Ogre.h"
-using namespace Ogre;
-
+#include "AmbientLight.h"
+#include "DLight.h"
 #include "LightMaterialGenerator.h"
+
+#include "OgreCompositorChain.h"
+#include "OgreSceneManager.h"
+#include "OgreTechnique.h"
 
 //-----------------------------------------------------------------------
 DeferredLightRenderOperation::DeferredLightRenderOperation(
-	CompositorInstance* instance, const CompositionPass* pass)
+	Ogre::CompositorInstance* instance, const Ogre::CompositionPass* pass)
 {
 	mViewport = instance->getChain()->getViewport();
 	
 	//Get the names of the GBuffer textures
-	const CompositionPass::InputTex& input0 = pass->getInput(0);
+	const Ogre::CompositionPass::InputTex& input0 = pass->getInput(0);
 	mTexName0 = instance->getTextureInstanceName(input0.name, input0.mrtIndex);
-	const CompositionPass::InputTex& input1 = pass->getInput(1);
+	const Ogre::CompositionPass::InputTex& input1 = pass->getInput(1);
 	mTexName1 = instance->getTextureInstanceName(input1.name, input1.mrtIndex);
 
 	// Create lights material generator
@@ -37,7 +26,7 @@ DeferredLightRenderOperation::DeferredLightRenderOperation(
 	
 	// Create the ambient light
 	mAmbientLight = new AmbientLight();
-	const MaterialPtr& mat = mAmbientLight->getMaterial();
+	const Ogre::MaterialPtr& mat = mAmbientLight->getMaterial();
 	mat->load();
 }
 //-----------------------------------------------------------------------
@@ -48,7 +37,7 @@ DLight* DeferredLightRenderOperation::createDLight(Ogre::Light* light)
 	return rv;
 }
 //-----------------------------------------------------------------------
-void injectTechnique(SceneManager* sm, Technique* tech, Renderable* rend, const Ogre::LightList* lightList)
+void injectTechnique(Ogre::SceneManager* sm, Ogre::Technique* tech, Ogre::Renderable* rend, const Ogre::LightList* lightList)
 {
     for(unsigned short i=0; i<tech->getNumPasses(); ++i)
 	{
@@ -65,18 +54,18 @@ void injectTechnique(SceneManager* sm, Technique* tech, Renderable* rend, const 
 	}
 }
 //-----------------------------------------------------------------------
-void DeferredLightRenderOperation::execute(SceneManager *sm, RenderSystem *rs)
+void DeferredLightRenderOperation::execute(Ogre::SceneManager *sm, Ogre::RenderSystem *rs)
 {
     Ogre::Camera* cam = mViewport->getCamera();
 
 	mAmbientLight->updateFromCamera(cam);
-    Technique* tech = mAmbientLight->getMaterial()->getBestTechnique();
+    Ogre::Technique* tech = mAmbientLight->getMaterial()->getBestTechnique();
 	injectTechnique(sm, tech, mAmbientLight, 0);
 
-	const LightList& lightList = sm->_getLightsAffectingFrustum();
-    for (LightList::const_iterator it = lightList.begin(); it != lightList.end(); it++) 
+	const Ogre::LightList& lightList = sm->_getLightsAffectingFrustum();
+    for(Ogre::LightList::const_iterator it = lightList.begin(); it != lightList.end(); it++) 
 	{
-        Light* light = *it;
+        Ogre::Light* light = *it;
 		Ogre::LightList ll;
 		ll.push_back(light);
 
@@ -101,15 +90,15 @@ void DeferredLightRenderOperation::execute(SceneManager *sm, RenderSystem *rs)
 		//Update shadow texture
 		if (dLight->getCastChadows())
 		{
-			SceneManager::RenderContext* context = sm->_pauseRendering();
+			Ogre::SceneManager::RenderContext* context = sm->_pauseRendering();
 
 			sm->prepareShadowTextures(cam, mViewport, &ll);
 			sm->_resumeRendering(context);
 			
-			Pass* pass = tech->getPass(0);
-			TextureUnitState* tus = pass->getTextureUnitState("ShadowMap");
+			Ogre::Pass* pass = tech->getPass(0);
+			Ogre::TextureUnitState* tus = pass->getTextureUnitState("ShadowMap");
 			assert(tus);
-			const TexturePtr& shadowTex = sm->getShadowTexture(0);
+			const Ogre::TexturePtr& shadowTex = sm->getShadowTexture(0);
 			if (tus->_getTexturePtr() != shadowTex)
 			{
 				tus->_setTexturePtr(shadowTex);

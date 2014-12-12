@@ -1,17 +1,3 @@
-/*
------------------------------------------------------------------------------
-This source file is part of OGRE
-(Object-oriented Graphics Rendering Engine)
-For the latest info, see http://www.ogre3d.org/
-
-Copyright (c) 2000-2013 Torus Knot Software Ltd
-Also see acknowledgements in Readme.html
-
-You may use this sample code for anything you like, it is not covered by the
-same license as the rest of the engine.
------------------------------------------------------------------------------
-*/
-
 #include "stdafx.h"
 #include "DeferredShading.h"
 
@@ -38,29 +24,20 @@ same license as the rest of the engine.
 #include "GBufferSchemeHandler.h"
 #include "NullSchemeHandler.h"
 
-#include "SharedData.h"
-
-namespace Ogre
-{
-    template<> SharedData* Singleton<SharedData>::msSingleton = 0;
-}
-
-using namespace Ogre;
-
 const Ogre::uint8 DeferredShadingSystem::PRE_GBUFFER_RENDER_QUEUE = Ogre::RENDER_QUEUE_1;
 const Ogre::uint8 DeferredShadingSystem::POST_GBUFFER_RENDER_QUEUE = Ogre::RENDER_QUEUE_8;
 
 DeferredShadingSystem::DeferredShadingSystem(
-		Viewport *vp, SceneManager *sm,  Camera *cam
+		Ogre::Viewport *vp, Ogre::SceneManager *sm,  Ogre::Camera *cam
 	):
 	mViewport(vp), mSceneMgr(sm), mCamera(cam)
 {
-	sm->setShadowTechnique(SHADOWTYPE_TEXTURE_ADDITIVE);
+	sm->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_ADDITIVE);
 	sm->setShadowTextureCasterMaterial("DeferredShading/Shadows/Caster");
 	mSceneMgr->setShadowTextureCount(1);
 	mSceneMgr->setShadowFarDistance(150);
 	//Use a value of "2" to use a different depth buffer pool and avoid sharing this with the Backbuffer's
-	mSceneMgr->setShadowTextureConfig( 0, 512, 512, PF_FLOAT16_R, 0, 2 );
+	mSceneMgr->setShadowTextureConfig( 0, 512, 512, Ogre::PF_FLOAT16_R, 0, 2 );
 	mSceneMgr->setShadowDirectionalLightExtrusionDistance(75);
 }
 
@@ -73,17 +50,17 @@ void DeferredShadingSystem::initialize()
 	
 	mActive = false;
 	
-	mSSAO = true;
+	mSSAO = false;
 	mCurrentMode = DSM_SHOWLIT;
-	setActive(true);
+	// setActive(true);
 }
 
 DeferredShadingSystem::~DeferredShadingSystem()
 {
-	CompositorChain *chain = CompositorManager::getSingleton().getCompositorChain(mViewport);
+	Ogre::CompositorChain *chain = Ogre::CompositorManager::getSingleton().getCompositorChain(mViewport);
 	for(int i=0; i<DSM_COUNT; ++i)
 		chain->_removeInstance(mInstance[i]);
-	CompositorManager::getSingleton().removeCompositorChain(mViewport);
+	Ogre::CompositorManager::getSingleton().removeCompositorChain(mViewport);
 
 	Ogre::CompositorManager& compMgr = Ogre::CompositorManager::getSingleton();
 	CompositorLogicMap::const_iterator itor = mCompositorLogics.begin();
@@ -157,15 +134,15 @@ DeferredShadingSystem::DSMode DeferredShadingSystem::getMode(void) const
 
 void DeferredShadingSystem::createResources(void)
 {
-	CompositorManager &compMan = CompositorManager::getSingleton();
+	Ogre::CompositorManager &compMan = Ogre::CompositorManager::getSingleton();
 
 	//Hook up the compositor logic and scheme handlers.
 	//This can theoretically happen in a loaded plugin, but in this case the demo contains the code.
 	static bool firstTime = true;
 	if (firstTime)
 	{
-		MaterialManager::getSingleton().addListener(new GBufferSchemeHandler, "GBuffer");
-		MaterialManager::getSingleton().addListener(new NullSchemeHandler, "NoGBuffer");
+		Ogre::MaterialManager::getSingleton().addListener(new GBufferSchemeHandler, "GBuffer");
+		Ogre::MaterialManager::getSingleton().addListener(new NullSchemeHandler, "NoGBuffer");
 
 		compMan.registerCustomCompositionPass("DeferredLight", new DeferredLightCompositionPass);
 
@@ -192,13 +169,13 @@ void DeferredShadingSystem::logCurrentMode(void)
 {
 	if (mActive==false)
 	{
-		LogManager::getSingleton().logMessage("No Compositor Enabled!");
+		Ogre::LogManager::getSingleton().logMessage("No Compositor Enabled!");
 		return;
 	}
 
-	CompositorInstance* ci = mInstance[mCurrentMode];
+	Ogre::CompositorInstance* ci = mInstance[mCurrentMode];
 	assert(ci->getEnabled()==true);
 
-	LogManager::getSingleton().logMessage("Current Mode: ");
-	LogManager::getSingleton().logMessage(ci->getCompositor()->getName());
+	Ogre::LogManager::getSingleton().logMessage("Current Mode: ");
+	Ogre::LogManager::getSingleton().logMessage(ci->getCompositor()->getName());
 }

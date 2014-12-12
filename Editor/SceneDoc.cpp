@@ -15,6 +15,7 @@
 #include "SceneResourceTree.h"
 #include "StaticMesh.h"
 #include "TerrainEditHandler.h"
+#include "DeferredShading.h"
 
 #include "OgreRoot.h"
 #include "OgreCamera.h"
@@ -40,6 +41,8 @@ SceneDoc::SceneDoc()
 	gameMode = false;
 	paste = false;
 	showDebugOverlay = false;
+	deferredShading = false;
+	ssao = false;
 
 	initialized = false;
 	activeView = NULL;
@@ -715,6 +718,10 @@ BEGIN_MESSAGE_MAP(SceneDoc, CDocument)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_LOAD_BRUSH, ID_RESIZE_BRUSH, OnUpdateBrushMenu)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_LOAD_TEXTURE, ID_RESIZE_TEXTURE, OnUpdateTextureMenu)
 	ON_COMMAND(ID_SAVE_SCENE, &SceneDoc::OnSaveScene)
+	ON_COMMAND(ID_DEFERRED_SHADING, &SceneDoc::OnDeferredShading)
+	ON_UPDATE_COMMAND_UI(ID_DEFERRED_SHADING, &SceneDoc::OnUpdateDeferredShading)
+	ON_COMMAND(ID_SSAO, &SceneDoc::OnSsao)
+	ON_UPDATE_COMMAND_UI(ID_SSAO, &SceneDoc::OnUpdateSsao)
 END_MESSAGE_MAP()
 
 void SceneDoc::OnSaveScene()
@@ -1138,12 +1145,12 @@ void SceneDoc::OnUpdateObjectPaste(CCmdUI *pCmdUI)
 void SceneDoc::OnShowDebugOverlay()
 {
 	showDebugOverlay = !showDebugOverlay;
+	RenderPump::current->showDebugOverlay(showDebugOverlay);
 }
 
 void SceneDoc::OnUpdateShowDebugOverlay(CCmdUI *pCmdUI)
 {
 	pCmdUI->SetCheck(showDebugOverlay);
-	RenderPump::current->showDebugOverlay(showDebugOverlay);
 }
 
 void SceneDoc::OnUpdateBrushMenu(CCmdUI* pCmdUI)
@@ -1154,4 +1161,29 @@ void SceneDoc::OnUpdateBrushMenu(CCmdUI* pCmdUI)
 void SceneDoc::OnUpdateTextureMenu(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(TRUE);
+}
+
+void SceneDoc::OnDeferredShading()
+{
+	deferredShading = !deferredShading;
+	deferredShadingSystem->setActive(deferredShading);
+}
+
+
+void SceneDoc::OnUpdateDeferredShading(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(deferredShading);
+}
+
+
+void SceneDoc::OnSsao()
+{
+	ssao = !ssao;
+	deferredShadingSystem->setSSAO(ssao);
+}
+
+
+void SceneDoc::OnUpdateSsao(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(ssao);
 }

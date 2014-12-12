@@ -1,17 +1,3 @@
-/*
------------------------------------------------------------------------------
-This source file is part of OGRE
-(Object-oriented Graphics Rendering Engine)
-For the latest info, see http://www.ogre3d.org/
-
-Copyright (c) 2000-2013 Torus Knot Software Ltd
-Also see acknowledgements in Readme.html
-
-You may use this sample code for anything you like, it is not covered by the
-same license as the rest of the engine.
------------------------------------------------------------------------------
-*/
-
 #include "stdafx.h"
 #include "DLight.h"
 
@@ -27,14 +13,13 @@ same license as the rest of the engine.
 #define ENABLE_BIT(mask, flag) (mask) |= (flag)
 #define DISABLE_BIT(mask, flag) (mask) &= ~(flag)
 
-using namespace Ogre;
 //-----------------------------------------------------------------------
 DLight::DLight(MaterialGenerator *sys, Ogre::Light* parentLight):
     mParentLight(parentLight), bIgnoreWorld(false), mGenerator(sys), mPermutation(0)
 {
 	// Set up geometry
 	// Allocate render operation
-	mRenderOp.operationType = RenderOperation::OT_TRIANGLE_LIST;
+	mRenderOp.operationType = Ogre::RenderOperation::OT_TRIANGLE_LIST;
 	mRenderOp.indexData = 0;
 	mRenderOp.vertexData = 0;
 	mRenderOp.useIndexes = true;
@@ -58,7 +43,7 @@ void DLight::setAttenuation(float c, float b, float a)
 	if(c != 1.0f || b != 0.0f || a != 0.0f)
 	{
 		ENABLE_BIT(mPermutation, LightMaterialGenerator::MI_ATTENUATED);
-		if (mParentLight->getType() == Light::LT_POINT)
+		if (mParentLight->getType() == Ogre::Light::LT_POINT)
 		{
 			//// Calculate radius from Attenuation
 			int threshold_level = 10;// difference of 10-15 levels deemed unnoticeable
@@ -79,7 +64,7 @@ void DLight::setAttenuation(float c, float b, float a)
 	rebuildGeometry(outerRadius);
 }
 //-----------------------------------------------------------------------
-void DLight::setSpecularColour(const ColourValue &col)
+void DLight::setSpecularColour(const Ogre::ColourValue &col)
 {
 	//setCustomParameter(2, Vector4(col.r, col.g, col.b, col.a));
 	/// There is a specular component? Set material accordingly
@@ -100,19 +85,19 @@ void DLight::rebuildGeometry(float radius)
 
 	switch (mParentLight->getType())
 	{
-	case Light::LT_DIRECTIONAL:
+	case Ogre::Light::LT_DIRECTIONAL:
 		createRectangle2D();
         ENABLE_BIT(mPermutation,LightMaterialGenerator::MI_DIRECTIONAL);
 		break;
-	case Light::LT_POINT:
+	case Ogre::Light::LT_POINT:
 		/// XXX some more intelligent expression for rings and segments
 		createSphere(radius, 10, 10);
 		ENABLE_BIT(mPermutation,LightMaterialGenerator::MI_POINT);
 		break;
-	case Light::LT_SPOTLIGHT:
-		Real height = mParentLight->getAttenuationRange();
-		Radian coneRadiusAngle = mParentLight->getSpotlightOuterAngle() / 2;
-        Real rad = Math::Tan(coneRadiusAngle) * height;
+	case Ogre::Light::LT_SPOTLIGHT:
+		Ogre::Real height = mParentLight->getAttenuationRange();
+		Ogre::Radian coneRadiusAngle = mParentLight->getSpotlightOuterAngle() / 2;
+        Ogre::Real rad = Ogre::Math::Tan(coneRadiusAngle) * height;
 		createCone(rad, height, 20);
 		ENABLE_BIT(mPermutation,LightMaterialGenerator::MI_SPOTLIGHT);
 		break;
@@ -126,16 +111,16 @@ void DLight::createRectangle2D()
 	delete mRenderOp.vertexData; 
 	delete mRenderOp.indexData; 
 
-	mRenderOp.vertexData = new VertexData();
+	mRenderOp.vertexData = new Ogre::VertexData();
     mRenderOp.indexData = 0;
 
 	GeomUtils::createQuad(mRenderOp.vertexData);
 
-    mRenderOp.operationType = RenderOperation::OT_TRIANGLE_STRIP; 
+    mRenderOp.operationType = Ogre::RenderOperation::OT_TRIANGLE_STRIP; 
     mRenderOp.useIndexes = false; 
 
 	// Set bounding
-    setBoundingBox(AxisAlignedBox(-10000,-10000,-10000,10000,10000,10000));
+    setBoundingBox(Ogre::AxisAlignedBox(-10000,-10000,-10000,10000,10000,10000));
 	mRadius = 15000;
 	bIgnoreWorld = true;
 }
@@ -144,9 +129,9 @@ void DLight::createSphere(float radius, int nRings, int nSegments)
 {
 	delete mRenderOp.vertexData; 
 	delete mRenderOp.indexData;
-	mRenderOp.operationType = RenderOperation::OT_TRIANGLE_LIST;
-	mRenderOp.indexData = new IndexData();
-	mRenderOp.vertexData = new VertexData();
+	mRenderOp.operationType = Ogre::RenderOperation::OT_TRIANGLE_LIST;
+	mRenderOp.indexData = new Ogre::IndexData();
+	mRenderOp.vertexData = new Ogre::VertexData();
 	mRenderOp.useIndexes = true;
 
 	GeomUtils::createSphere(mRenderOp.vertexData, mRenderOp.indexData
@@ -157,7 +142,7 @@ void DLight::createSphere(float radius, int nRings, int nSegments)
 		);
 
 	// Set bounding box and sphere
-	setBoundingBox( AxisAlignedBox( Vector3(-radius, -radius, -radius), Vector3(radius, radius, radius) ) );
+	setBoundingBox( Ogre::AxisAlignedBox( Ogre::Vector3(-radius, -radius, -radius), Ogre::Vector3(radius, radius, radius) ) );
 	mRadius = radius;
 	bIgnoreWorld = false;
 }
@@ -166,9 +151,9 @@ void DLight::createCone(float radius, float height, int nVerticesInBase)
 {
 	delete mRenderOp.vertexData;
 	delete mRenderOp.indexData;
-	mRenderOp.operationType = RenderOperation::OT_TRIANGLE_LIST;
-	mRenderOp.indexData = new IndexData();
-	mRenderOp.vertexData = new VertexData();
+	mRenderOp.operationType = Ogre::RenderOperation::OT_TRIANGLE_LIST;
+	mRenderOp.indexData = new Ogre::IndexData();
+	mRenderOp.vertexData = new Ogre::VertexData();
 	mRenderOp.useIndexes = true;
 
 	GeomUtils::createCone(mRenderOp.vertexData, mRenderOp.indexData
@@ -176,20 +161,20 @@ void DLight::createCone(float radius, float height, int nVerticesInBase)
 		, height, nVerticesInBase);
 
 	// Set bounding box and sphere
-	setBoundingBox( AxisAlignedBox( 
-			Vector3(-radius, 0, -radius), 
-			Vector3(radius, height, radius) ) );
+	setBoundingBox( Ogre::AxisAlignedBox( 
+			Ogre::Vector3(-radius, 0, -radius), 
+			Ogre::Vector3(radius, height, radius) ) );
 
 	mRadius = radius;
 	bIgnoreWorld = false;
 }
 //-----------------------------------------------------------------------
-Real DLight::getBoundingRadius(void) const
+Ogre::Real DLight::getBoundingRadius(void) const
 {
 	return mRadius;
 }
 //-----------------------------------------------------------------------
-Real DLight::getSquaredViewDepth(const Camera* cam) const
+Ogre::Real DLight::getSquaredViewDepth(const Ogre::Camera* cam) const
 {
 	if(bIgnoreWorld)
 	{
@@ -197,28 +182,28 @@ Real DLight::getSquaredViewDepth(const Camera* cam) const
 	}
 	else
 	{
-		Vector3 dist = cam->getDerivedPosition() - getParentSceneNode()->_getDerivedPosition();
+		Ogre::Vector3 dist = cam->getDerivedPosition() - getParentSceneNode()->_getDerivedPosition();
 		return dist.squaredLength();
 	}
 }
 //-----------------------------------------------------------------------
-const MaterialPtr& DLight::getMaterial(void) const
+const Ogre::MaterialPtr& DLight::getMaterial(void) const
 {
 	return mGenerator->getMaterial(mPermutation);
 }
 //-----------------------------------------------------------------------
-void DLight::getWorldTransforms(Matrix4* xform) const
+void DLight::getWorldTransforms(Ogre::Matrix4* xform) const
 {
-	if (mParentLight->getType() == Light::LT_SPOTLIGHT)
+	if (mParentLight->getType() == Ogre::Light::LT_SPOTLIGHT)
 	{
-		Quaternion quat = Vector3::UNIT_Y.getRotationTo(mParentLight->getDerivedDirection());
+		Ogre::Quaternion quat = Ogre::Vector3::UNIT_Y.getRotationTo(mParentLight->getDerivedDirection());
 		xform->makeTransform(mParentLight->getDerivedPosition(),
-			Vector3::UNIT_SCALE, quat);
+			Ogre::Vector3::UNIT_SCALE, quat);
 	}
 	else
 	{
 		xform->makeTransform(mParentLight->getDerivedPosition(),
-			Vector3::UNIT_SCALE, Quaternion::IDENTITY);
+			Ogre::Vector3::UNIT_SCALE, Ogre::Quaternion::IDENTITY);
 	}
 	
 }
@@ -284,7 +269,7 @@ bool DLight::getCastChadows() const
 	return 
 		mParentLight->_getManager()->isShadowTechniqueInUse() &&
 		mParentLight->getCastShadows() && 
-		(mParentLight->getType() == Light::LT_DIRECTIONAL || mParentLight->getType() == Light::LT_SPOTLIGHT);
+		(mParentLight->getType() == Ogre::Light::LT_DIRECTIONAL || mParentLight->getType() == Ogre::Light::LT_SPOTLIGHT);
 }
 //-----------------------------------------------------------------------
 void DLight::updateFromCamera(Ogre::Camera* camera)
@@ -332,9 +317,9 @@ void DLight::updateFromCamera(Ogre::Camera* camera)
 			}
 		}
 
-		Camera shadowCam("ShadowCameraSetupCam", 0);
+		Ogre::Camera shadowCam("ShadowCameraSetupCam", 0);
 		shadowCam._notifyViewport(camera->getViewport());
-		SceneManager* sm = mParentLight->_getManager();
+		Ogre::SceneManager* sm = mParentLight->_getManager();
 		sm->getShadowCameraSetup()->getShadowCamera(sm, 
 			camera, camera->getViewport(), mParentLight, &shadowCam, 0);
 			

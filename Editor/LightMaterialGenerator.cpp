@@ -1,24 +1,3 @@
-/******************************************************************************
-Copyright (c) W.J. van der Laan
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of 
-this software  and associated documentation files (the "Software"), to deal in 
-the Software without restriction, including without limitation the rights to use, 
-copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
-Software, and to permit persons to whom the Software is furnished to do so, subject 
-to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies 
-or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
-PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,OUT OF OR IN CONNECTION WITH THE 
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-******************************************************************************/
-
 #include "stdafx.h"
 #include "LightMaterialGenerator.h"
 
@@ -35,14 +14,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "DLight.h"
 
-using namespace Ogre;
-
 //CG
 class LightMaterialGeneratorCG : public MaterialGenerator::Impl
 {
 public:
 	typedef MaterialGenerator::Perm Perm;
-	LightMaterialGeneratorCG(const String &baseName):
+	LightMaterialGeneratorCG(const Ogre::String &baseName):
 	    mBaseName(baseName) 
 	{
 
@@ -52,9 +29,9 @@ public:
 
 	}
 
-	virtual GpuProgramPtr generateVertexShader(Perm permutation)
+	virtual Ogre::GpuProgramPtr generateVertexShader(Perm permutation)
 	{
-        String programName = "DeferredShading/post/";
+        Ogre::String programName = "DeferredShading/post/";
 
 		if (permutation & LightMaterialGenerator::MI_DIRECTIONAL)
 		{
@@ -65,19 +42,19 @@ public:
 			programName += "LightMaterial_vs";
 		}
 
-		GpuProgramPtr ptr = HighLevelGpuProgramManager::getSingleton().getByName(programName);
+		Ogre::GpuProgramPtr ptr = Ogre::HighLevelGpuProgramManager::getSingleton().getByName(programName);
 		assert(!ptr.isNull());
 		return ptr;
 	}
 
-	virtual GpuProgramPtr generateFragmentShader(Perm permutation)
+	virtual Ogre::GpuProgramPtr generateFragmentShader(Perm permutation)
 	{
 		/// Create shader
 		if (mMasterSource.empty())
 		{
-			DataStreamPtr ptrMasterSource = ResourceGroupManager::getSingleton().openResource(
+			Ogre::DataStreamPtr ptrMasterSource = Ogre::ResourceGroupManager::getSingleton().openResource(
 				 "DeferredShading/post/LightMaterial_ps.cg"
-				, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+				, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 			assert(ptrMasterSource.isNull()==false);
 			mMasterSource = ptrMasterSource->getAsString();
 		}
@@ -85,12 +62,12 @@ public:
 		assert(mMasterSource.empty()==false);
 
 		// Create name
-		String name = mBaseName+StringConverter::toString(permutation)+"_ps";		
+		Ogre::String name = mBaseName+Ogre::StringConverter::toString(permutation)+"_ps";		
 
 		// Create shader object
-		HighLevelGpuProgramPtr ptrProgram = HighLevelGpuProgramManager::getSingleton().createProgram(
-			name, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-			"cg", GPT_FRAGMENT_PROGRAM);
+		Ogre::HighLevelGpuProgramPtr ptrProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+			name, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+			"cg", Ogre::GPT_FRAGMENT_PROGRAM);
 		ptrProgram->setSource(mMasterSource);
 		ptrProgram->setParameter("entry_point","main");
 	    ptrProgram->setParameter("profiles","ps_2_x arbfp1");
@@ -100,12 +77,12 @@ public:
 
 		setUpBaseParameters(ptrProgram->getDefaultParameters());
 
-		return GpuProgramPtr(ptrProgram);
+		return Ogre::GpuProgramPtr(ptrProgram);
 	}
 
-	virtual MaterialPtr generateTemplateMaterial(Perm permutation)
+	virtual Ogre::MaterialPtr generateTemplateMaterial(Perm permutation)
 	{
-		String materialName = mBaseName;
+		Ogre::String materialName = mBaseName;
 	
         if(permutation & LightMaterialGenerator::MI_DIRECTIONAL)
 		{   
@@ -120,19 +97,19 @@ public:
 		{
 			materialName += "Shadow";
 		}
-		return MaterialManager::getSingleton().getByName(materialName);
+		return Ogre::MaterialManager::getSingleton().getByName(materialName);
 	}
 
 	protected:
-		String mBaseName;
-        String mMasterSource;
+		Ogre::String mBaseName;
+        Ogre::String mMasterSource;
 		// Utility method
-		String getPPDefines(Perm permutation)
+		Ogre::String getPPDefines(Perm permutation)
 		{
-			String strPPD;
+			Ogre::String strPPD;
 
 			//Get the type of light
-			String lightType;
+			Ogre::String lightType;
 			if (permutation & LightMaterialGenerator::MI_POINT)
 			{
 				lightType = "POINT";
@@ -167,28 +144,28 @@ public:
 			return strPPD;
 		}
 
-		void setUpBaseParameters(const GpuProgramParametersSharedPtr& params)
+		void setUpBaseParameters(const Ogre::GpuProgramParametersSharedPtr& params)
 		{
 			assert(params.isNull()==false);
 
-			struct AutoParamPair { String name; GpuProgramParameters::AutoConstantType type; };	
+			struct AutoParamPair { Ogre::String name; Ogre::GpuProgramParameters::AutoConstantType type; };	
 
 			//A list of auto params that might be present in the shaders generated
 			static const AutoParamPair AUTO_PARAMS[] = {
-				{ "vpWidth",			GpuProgramParameters::ACT_VIEWPORT_WIDTH },
-				{ "vpHeight",			GpuProgramParameters::ACT_VIEWPORT_HEIGHT },
-				{ "worldView",			GpuProgramParameters::ACT_WORLDVIEW_MATRIX },
-				{ "invProj",			GpuProgramParameters::ACT_INVERSE_PROJECTION_MATRIX },
-				{ "invView",			GpuProgramParameters::ACT_INVERSE_VIEW_MATRIX },
-				{ "flip",				GpuProgramParameters::ACT_RENDER_TARGET_FLIPPING },
-				{ "lightDiffuseColor",	GpuProgramParameters::ACT_LIGHT_DIFFUSE_COLOUR },
-				{ "lightSpecularColor", GpuProgramParameters::ACT_LIGHT_SPECULAR_COLOUR },
-				{ "lightFalloff",		GpuProgramParameters::ACT_LIGHT_ATTENUATION },
-				{ "lightPos",			GpuProgramParameters::ACT_LIGHT_POSITION_VIEW_SPACE },
-				{ "lightDir",			GpuProgramParameters::ACT_LIGHT_DIRECTION_VIEW_SPACE },
-				{ "spotParams",			GpuProgramParameters::ACT_SPOTLIGHT_PARAMS },
-				{ "farClipDistance",	GpuProgramParameters::ACT_FAR_CLIP_DISTANCE },
-				{ "shadowViewProjMat",	GpuProgramParameters::ACT_TEXTURE_VIEWPROJ_MATRIX }
+				{ "vpWidth",			Ogre::GpuProgramParameters::ACT_VIEWPORT_WIDTH },
+				{ "vpHeight",			Ogre::GpuProgramParameters::ACT_VIEWPORT_HEIGHT },
+				{ "worldView",			Ogre::GpuProgramParameters::ACT_WORLDVIEW_MATRIX },
+				{ "invProj",			Ogre::GpuProgramParameters::ACT_INVERSE_PROJECTION_MATRIX },
+				{ "invView",			Ogre::GpuProgramParameters::ACT_INVERSE_VIEW_MATRIX },
+				{ "flip",				Ogre::GpuProgramParameters::ACT_RENDER_TARGET_FLIPPING },
+				{ "lightDiffuseColor",	Ogre::GpuProgramParameters::ACT_LIGHT_DIFFUSE_COLOUR },
+				{ "lightSpecularColor", Ogre::GpuProgramParameters::ACT_LIGHT_SPECULAR_COLOUR },
+				{ "lightFalloff",		Ogre::GpuProgramParameters::ACT_LIGHT_ATTENUATION },
+				{ "lightPos",			Ogre::GpuProgramParameters::ACT_LIGHT_POSITION_VIEW_SPACE },
+				{ "lightDir",			Ogre::GpuProgramParameters::ACT_LIGHT_DIRECTION_VIEW_SPACE },
+				{ "spotParams",			Ogre::GpuProgramParameters::ACT_SPOTLIGHT_PARAMS },
+				{ "farClipDistance",	Ogre::GpuProgramParameters::ACT_FAR_CLIP_DISTANCE },
+				{ "shadowViewProjMat",	Ogre::GpuProgramParameters::ACT_TEXTURE_VIEWPROJ_MATRIX }
 			};
 			int numParams = sizeof(AUTO_PARAMS) / sizeof(AutoParamPair);
 
@@ -207,7 +184,7 @@ class LightMaterialGeneratorGLSL : public MaterialGenerator::Impl
 {
 public:
 	typedef MaterialGenerator::Perm Perm;
-	LightMaterialGeneratorGLSL(const String &baseName):
+	LightMaterialGeneratorGLSL(const Ogre::String &baseName):
     mBaseName(baseName)
 	{
 
@@ -217,9 +194,9 @@ public:
 
 	}
 
-	virtual GpuProgramPtr generateVertexShader(Perm permutation)
+	virtual Ogre::GpuProgramPtr generateVertexShader(Perm permutation)
 	{
-        String programName = "DeferredShading/post/";
+        Ogre::String programName = "DeferredShading/post/";
 
 		if (permutation & LightMaterialGenerator::MI_DIRECTIONAL)
 		{
@@ -230,23 +207,23 @@ public:
 			programName += "LightMaterial_vs";
 		}
 
-		GpuProgramPtr ptr = HighLevelGpuProgramManager::getSingleton().getByName(programName);
+		Ogre::GpuProgramPtr ptr = Ogre::HighLevelGpuProgramManager::getSingleton().getByName(programName);
 		assert(!ptr.isNull());
 		return ptr;
 	}
 
-	virtual GpuProgramPtr generateFragmentShader(Perm permutation)
+	virtual Ogre::GpuProgramPtr generateFragmentShader(Perm permutation)
 	{
 		/// Create shader
 		if (mMasterSource.empty())
 		{
-			DataStreamPtr ptrMasterSource;
-            if(GpuProgramManager::getSingleton().isSyntaxSupported("glsles"))
-                ptrMasterSource = ResourceGroupManager::getSingleton().openResource("DeferredShading/post/LightMaterial_ps.glsles",
-                                                                                    ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+			Ogre::DataStreamPtr ptrMasterSource;
+            if(Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsles"))
+                ptrMasterSource = Ogre::ResourceGroupManager::getSingleton().openResource("DeferredShading/post/LightMaterial_ps.glsles",
+                                                                                    Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
             else
-                ptrMasterSource = ResourceGroupManager::getSingleton().openResource("DeferredShading/post/LightMaterial_ps.glsl",
-                                                                                    ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+                ptrMasterSource = Ogre::ResourceGroupManager::getSingleton().openResource("DeferredShading/post/LightMaterial_ps.glsl",
+                                                                                    Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
 			assert(ptrMasterSource.isNull()==false);
 			mMasterSource = ptrMasterSource->getAsString();
@@ -255,20 +232,20 @@ public:
 		assert(mMasterSource.empty()==false);
 
 		// Create name
-		String name = mBaseName+StringConverter::toString(permutation)+"_ps";
+		Ogre::String name = mBaseName+Ogre::StringConverter::toString(permutation)+"_ps";
 
 		// Create shader object
-		HighLevelGpuProgramPtr ptrProgram;
-        if(GpuProgramManager::getSingleton().isSyntaxSupported("glsles"))
+		Ogre::HighLevelGpuProgramPtr ptrProgram;
+        if(Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsles"))
         {
-            ptrProgram = HighLevelGpuProgramManager::getSingleton().createProgram(name, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-                                                                                  "glsles", GPT_FRAGMENT_PROGRAM);
+            ptrProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(name, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+                                                                                  "glsles", Ogre::GPT_FRAGMENT_PROGRAM);
             ptrProgram->setParameter("profiles", "glsles");
         }
         else
         {
-            ptrProgram = HighLevelGpuProgramManager::getSingleton().createProgram(name, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-                                                                                  "glsl", GPT_FRAGMENT_PROGRAM);
+            ptrProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(name, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+                                                                                  "glsl", Ogre::GPT_FRAGMENT_PROGRAM);
             ptrProgram->setParameter("profiles", "glsl150");
         }
         ptrProgram->setSource(mMasterSource);
@@ -279,7 +256,7 @@ public:
 		setUpBaseParameters(ptrProgram->getDefaultParameters());
 
         // Bind samplers
-		GpuProgramParametersSharedPtr params = ptrProgram->getDefaultParameters();
+		Ogre::GpuProgramParametersSharedPtr params = ptrProgram->getDefaultParameters();
         int numSamplers = 0;
         params->setNamedConstant("Tex0", (int)numSamplers++);
         params->setNamedConstant("Tex1", (int)numSamplers++);
@@ -287,12 +264,12 @@ public:
         if(permutation & LightMaterialGenerator::MI_SHADOW_CASTER)
             params->setNamedConstant("ShadowTex", (int)numSamplers++);
 
-		return GpuProgramPtr(ptrProgram);
+		return Ogre::GpuProgramPtr(ptrProgram);
 	}
 
-	virtual MaterialPtr generateTemplateMaterial(Perm permutation)
+	virtual Ogre::MaterialPtr generateTemplateMaterial(Perm permutation)
 	{
-		String materialName = mBaseName;
+		Ogre::String materialName = mBaseName;
 
         if(permutation & LightMaterialGenerator::MI_DIRECTIONAL)
 		{
@@ -307,16 +284,16 @@ public:
 		{
 			materialName += "Shadow";
 		}
-		return MaterialManager::getSingleton().getByName(materialName);
+		return Ogre::MaterialManager::getSingleton().getByName(materialName);
 	}
 
 protected:
-    String mBaseName;
-    String mMasterSource;
+    Ogre::String mBaseName;
+    Ogre::String mMasterSource;
     // Utility method
-    String getPPDefines(Perm permutation)
+    Ogre::String getPPDefines(Perm permutation)
     {
-        String strPPD;
+        Ogre::String strPPD;
 
         //Get the type of light
         Ogre::uint lightType = 0;
@@ -336,7 +313,7 @@ protected:
         {
             assert(false && "Permutation must have a light type");
         }
-        strPPD += "LIGHT_TYPE=" + StringConverter::toString(lightType);
+        strPPD += "LIGHT_TYPE=" + Ogre::StringConverter::toString(lightType);
 
         //Optional parameters
         if (permutation & LightMaterialGenerator::MI_SPECULAR)
@@ -354,28 +331,28 @@ protected:
         return strPPD;
     }
 
-    void setUpBaseParameters(const GpuProgramParametersSharedPtr& params)
+    void setUpBaseParameters(const Ogre::GpuProgramParametersSharedPtr& params)
     {
         assert(params.isNull()==false);
 
-        struct AutoParamPair { String name; GpuProgramParameters::AutoConstantType type; };
+        struct AutoParamPair { Ogre::String name; Ogre::GpuProgramParameters::AutoConstantType type; };
 
         //A list of auto params that might be present in the shaders generated
         static const AutoParamPair AUTO_PARAMS[] = {
-            { "vpWidth",            GpuProgramParameters::ACT_VIEWPORT_WIDTH },
-            { "vpHeight",           GpuProgramParameters::ACT_VIEWPORT_HEIGHT },
-            { "worldView",          GpuProgramParameters::ACT_WORLDVIEW_MATRIX },
-            { "invProj",            GpuProgramParameters::ACT_INVERSE_PROJECTION_MATRIX },
-            { "invView",            GpuProgramParameters::ACT_INVERSE_VIEW_MATRIX },
-            { "flip",               GpuProgramParameters::ACT_RENDER_TARGET_FLIPPING },
-            { "lightDiffuseColor",  GpuProgramParameters::ACT_LIGHT_DIFFUSE_COLOUR },
-            { "lightSpecularColor", GpuProgramParameters::ACT_LIGHT_SPECULAR_COLOUR },
-            { "lightFalloff",       GpuProgramParameters::ACT_LIGHT_ATTENUATION },
-            { "lightPos",           GpuProgramParameters::ACT_LIGHT_POSITION_VIEW_SPACE },
-            { "lightDir",           GpuProgramParameters::ACT_LIGHT_DIRECTION_VIEW_SPACE },
-            { "spotParams",         GpuProgramParameters::ACT_SPOTLIGHT_PARAMS },
-            { "farClipDistance",    GpuProgramParameters::ACT_FAR_CLIP_DISTANCE },
-            { "shadowViewProjMat",  GpuProgramParameters::ACT_TEXTURE_VIEWPROJ_MATRIX }
+            { "vpWidth",            Ogre::GpuProgramParameters::ACT_VIEWPORT_WIDTH },
+            { "vpHeight",           Ogre::GpuProgramParameters::ACT_VIEWPORT_HEIGHT },
+            { "worldView",          Ogre::GpuProgramParameters::ACT_WORLDVIEW_MATRIX },
+            { "invProj",            Ogre::GpuProgramParameters::ACT_INVERSE_PROJECTION_MATRIX },
+            { "invView",            Ogre::GpuProgramParameters::ACT_INVERSE_VIEW_MATRIX },
+            { "flip",               Ogre::GpuProgramParameters::ACT_RENDER_TARGET_FLIPPING },
+            { "lightDiffuseColor",  Ogre::GpuProgramParameters::ACT_LIGHT_DIFFUSE_COLOUR },
+            { "lightSpecularColor", Ogre::GpuProgramParameters::ACT_LIGHT_SPECULAR_COLOUR },
+            { "lightFalloff",       Ogre::GpuProgramParameters::ACT_LIGHT_ATTENUATION },
+            { "lightPos",           Ogre::GpuProgramParameters::ACT_LIGHT_POSITION_VIEW_SPACE },
+            { "lightDir",           Ogre::GpuProgramParameters::ACT_LIGHT_DIRECTION_VIEW_SPACE },
+            { "spotParams",         Ogre::GpuProgramParameters::ACT_SPOTLIGHT_PARAMS },
+            { "farClipDistance",    Ogre::GpuProgramParameters::ACT_FAR_CLIP_DISTANCE },
+            { "shadowViewProjMat",  Ogre::GpuProgramParameters::ACT_TEXTURE_VIEWPROJ_MATRIX }
         };
         int numParams = sizeof(AUTO_PARAMS) / sizeof(AutoParamPair);
         
@@ -397,8 +374,8 @@ LightMaterialGenerator::LightMaterialGenerator()
 				LightMaterialGenerator::MI_SHADOW_CASTER;
 	
 	materialBaseName = "DeferredShading/LightMaterial/";
-    if ((GpuProgramManager::getSingleton().isSyntaxSupported("glsl") || GpuProgramManager::getSingleton().isSyntaxSupported("glsles")) &&
-        !(GpuProgramManager::getSingleton().isSyntaxSupported("ps_2_x") ||GpuProgramManager::getSingleton().isSyntaxSupported("arbfp1")))
+    if ((Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsl") || Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsles")) &&
+        !(Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("ps_2_x") || Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("arbfp1")))
         mImpl = new LightMaterialGeneratorGLSL("DeferredShading/LightMaterial/");
     else
         mImpl = new LightMaterialGeneratorCG("DeferredShading/LightMaterial/");

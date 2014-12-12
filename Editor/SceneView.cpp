@@ -7,6 +7,7 @@
 #include "ObjectEditHandler.h"
 #include "LiquidEditHandler.h"
 #include "CharacterController.h"
+#include "DeferredShading.h"
 
 #include "OgreSceneManager.h"
 #include "OgreRenderWindow.h"
@@ -89,4 +90,12 @@ void SceneView::OnSetFocus(CWnd* pOldWnd)
 
 	((SceneDoc*)GetDocument())->setActiveView(this);
 	SceneDoc::current = (SceneDoc*)GetDocument();
+}
+
+void SceneView::setupView()
+{
+	RenderView::setupView();
+	SceneDoc *Doc = (SceneDoc*)GetDocument();
+	Doc->setDeferredShadingSystem(new DeferredShadingSystem(viewport, Doc->getSceneManager(), Doc->getCamera()));
+	Doc->getDeferredShadingSystem()->initialize();
 }

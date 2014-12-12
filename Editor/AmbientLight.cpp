@@ -1,48 +1,33 @@
-/*
------------------------------------------------------------------------------
-This source file is part of OGRE
-(Object-oriented Graphics Rendering Engine)
-For the latest info, see http://www.ogre3d.org/
-
-Copyright (c) 2000-2013 Torus Knot Software Ltd
-Also see acknowledgements in Readme.html
-
-You may use this sample code for anything you like, it is not covered by the
-same license as the rest of the engine.
------------------------------------------------------------------------------
-*/
-
 #include "stdafx.h"
 #include "AmbientLight.h"
 #include "GeomUtils.h"
-#include "OgreMaterialManager.h"
-#include "OgreRoot.h"
-#include "OgreRenderSystem.h"
 
-using namespace Ogre;
+#include "OgreMaterialManager.h"
+#include "OgreRenderSystem.h"
+#include "OgreRoot.h"
 
 AmbientLight::AmbientLight()
 {
-	setRenderQueueGroup(RENDER_QUEUE_2);
+	setRenderQueueGroup(Ogre::RENDER_QUEUE_2);
 
-	mRenderOp.vertexData = new VertexData();
+	mRenderOp.vertexData = new Ogre::VertexData();
 	mRenderOp.indexData = 0;
 
 	GeomUtils::createQuad(mRenderOp.vertexData);
 
-	mRenderOp.operationType = RenderOperation::OT_TRIANGLE_STRIP; 
+	mRenderOp.operationType = Ogre::RenderOperation::OT_TRIANGLE_STRIP; 
 	mRenderOp.useIndexes = false; 
 
 	// Set bounding
-	setBoundingBox(AxisAlignedBox(-10000,-10000,-10000,10000,10000,10000));
+	setBoundingBox(Ogre::AxisAlignedBox(-10000,-10000,-10000,10000,10000,10000));
 	mRadius = 15000;
 
-	mMatPtr = MaterialManager::getSingleton().getByName("DeferredShading/AmbientLight");
+	mMatPtr = Ogre::MaterialManager::getSingleton().getByName("DeferredShading/AmbientLight");
 	assert(mMatPtr.isNull()==false);
 	mMatPtr->load();
 
     // Explicitly bind samplers for OpenGL
-    if(Root::getSingleton().getRenderSystem()->getName().find("OpenGL 3+") != String::npos)
+    if(Ogre::Root::getSingleton().getRenderSystem()->getName().find("OpenGL 3+") != Ogre::String::npos)
     {
         mMatPtr->getTechnique(0)->getPass(0)->getFragmentProgramParameters()->setNamedConstant("Tex0", 0);
         mMatPtr->getTechnique(0)->getPass(0)->getFragmentProgramParameters()->setNamedConstant("Tex1", 1);
@@ -63,25 +48,25 @@ AmbientLight::~AmbientLight()
 }
 
 /** @copydoc MovableObject::getBoundingRadius */
-Real AmbientLight::getBoundingRadius(void) const
+Ogre::Real AmbientLight::getBoundingRadius(void) const
 {
 	return mRadius;
 
 }
 /** @copydoc Renderable::getSquaredViewDepth */
-Real AmbientLight::getSquaredViewDepth(const Camera*) const
+Ogre::Real AmbientLight::getSquaredViewDepth(const Ogre::Camera*) const
 {
 	return 0.0;
 }
 
-const MaterialPtr& AmbientLight::getMaterial(void) const
+const Ogre::MaterialPtr& AmbientLight::getMaterial(void) const
 {
 	return mMatPtr;
 }
 
 void AmbientLight::getWorldTransforms(Ogre::Matrix4* xform) const
 {
-	*xform = Matrix4::IDENTITY;
+	*xform = Ogre::Matrix4::IDENTITY;
 }
 void AmbientLight::updateFromCamera(Ogre::Camera* camera)
 {

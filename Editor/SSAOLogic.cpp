@@ -1,28 +1,19 @@
-/*
------------------------------------------------------------------------------
-This source file is part of OGRE
-(Object-oriented Graphics Rendering Engine)
-For the latest info, see http://www.ogre3d.org/
-
-Copyright (c) 2000-2013 Torus Knot Software Ltd
-Also see acknowledgements in Readme.html
-
-You may use this sample code for anything you like, it is not covered by the
-same license as the rest of the engine.
------------------------------------------------------------------------------
-*/
-
 #include "stdafx.h"
 #include "SSAOLogic.h"
 
-#include <Ogre.h>
-using namespace Ogre;
+#include "OgreCamera.h"
+#include "OgreCompositorChain.h"
+#include "OgreCompositorInstance.h"
+#include "OgreMaterial.h"
+#include "OgrePass.h"
+#include "OgreTechnique.h"
+#include "OgreViewport.h"
 
-class ssaoListener: public Ogre::CompositorInstance::Listener
+class SSAOListener: public Ogre::CompositorInstance::Listener
 {
 public:
 	
-	ssaoListener(Ogre::CompositorInstance* instance) : mInstance(instance) {}
+	SSAOListener(Ogre::CompositorInstance* instance) : mInstance(instance) {}
    
 	// this callback we will use to modify SSAO parameters
     void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat)
@@ -64,5 +55,5 @@ private:
 
 Ogre::CompositorInstance::Listener* SSAOLogic::createListener(Ogre::CompositorInstance* instance)
 {
-	return new ssaoListener(instance);
+	return new SSAOListener(instance);
 }

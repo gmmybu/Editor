@@ -1,17 +1,3 @@
-/*
------------------------------------------------------------------------------
-This source file is part of OGRE
-(Object-oriented Graphics Rendering Engine)
-For the latest info, see http://www.ogre3d.org/
-
-Copyright (c) 2000-2013 Torus Knot Software Ltd
-Also see acknowledgements in Readme.html
-
-You may use this sample code for anything you like, it is not covered by the
-same license as the rest of the engine.
------------------------------------------------------------------------------
-*/
-
 #include "stdafx.h"
 #include "GeomUtils.h"
 
@@ -19,17 +5,15 @@ same license as the rest of the engine.
 #include "OgreSubMesh.h"
 #include "OgreHardwareBufferManager.h"
 
-using namespace Ogre;
-
-void GeomUtils::createSphere(  const String& strName
+void GeomUtils::createSphere(  const Ogre::String& strName
 							 , float radius
 							 , int nRings, int nSegments
 							 , bool bNormals
 							 , bool bTexCoords)
 {
-	MeshPtr pSphere = MeshManager::getSingleton().createManual(strName, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-	SubMesh *pSphereVertex = pSphere->createSubMesh();
-	pSphere->sharedVertexData = new VertexData();
+	Ogre::MeshPtr pSphere = Ogre::MeshManager::getSingleton().createManual(strName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	Ogre::SubMesh *pSphereVertex = pSphere->createSubMesh();
+	pSphere->sharedVertexData = new Ogre::VertexData();
 
 	createSphere(pSphere->sharedVertexData, pSphereVertex->indexData
 		, radius
@@ -42,13 +26,13 @@ void GeomUtils::createSphere(  const String& strName
 	pSphereVertex->useSharedVertices = true;
 
 	// the original code was missing this line:
-	pSphere->_setBounds( AxisAlignedBox( Vector3(-radius, -radius, -radius), Vector3(radius, radius, radius) ), false );
+	pSphere->_setBounds( Ogre::AxisAlignedBox( Ogre::Vector3(-radius, -radius, -radius), Ogre::Vector3(radius, radius, radius) ), false );
 	pSphere->_setBoundingSphereRadius(radius);
 	// this line makes clear the mesh is loaded (avoids memory leaks)
 	pSphere->load();
 }
 
-void GeomUtils::createSphere(VertexData*& vertexData, IndexData*& indexData
+void GeomUtils::createSphere(Ogre::VertexData*& vertexData, Ogre::IndexData*& indexData
 						 , float radius
 						 , int nRings, int nSegments
 						 , bool bNormals
@@ -57,40 +41,40 @@ void GeomUtils::createSphere(VertexData*& vertexData, IndexData*& indexData
 	assert(vertexData && indexData);
 
 	// define the vertex format
-	VertexDeclaration* vertexDecl = vertexData->vertexDeclaration;
+	Ogre::VertexDeclaration* vertexDecl = vertexData->vertexDeclaration;
 	size_t currOffset = 0;
 	// positions
-	vertexDecl->addElement(0, currOffset, VET_FLOAT3, VES_POSITION);
-	currOffset += VertexElement::getTypeSize(VET_FLOAT3);
+	vertexDecl->addElement(0, currOffset, Ogre::VET_FLOAT3, Ogre::VES_POSITION);
+	currOffset += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3);
 
 	if (bNormals)
 	{
 		// normals
-		vertexDecl->addElement(0, currOffset, VET_FLOAT3, VES_NORMAL);
-		currOffset += VertexElement::getTypeSize(VET_FLOAT3);
+		vertexDecl->addElement(0, currOffset, Ogre::VET_FLOAT3, Ogre::VES_NORMAL);
+		currOffset += Ogre::VertexElement::getTypeSize(Ogre::VET_FLOAT3);
 
 	}
 	// two dimensional texture coordinates
 	if (bTexCoords)
 	{
-		vertexDecl->addElement(0, currOffset, VET_FLOAT2, VES_TEXTURE_COORDINATES, 0);
+		vertexDecl->addElement(0, currOffset, Ogre::VET_FLOAT2, Ogre::VES_TEXTURE_COORDINATES, 0);
 	}
 
 	// allocate the vertex buffer
 	vertexData->vertexCount = (nRings + 1) * (nSegments+1);
-	HardwareVertexBufferSharedPtr vBuf = HardwareBufferManager::getSingleton().createVertexBuffer(vertexDecl->getVertexSize(0), vertexData->vertexCount, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
-	VertexBufferBinding* binding = vertexData->vertexBufferBinding;
+	Ogre::HardwareVertexBufferSharedPtr vBuf = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(vertexDecl->getVertexSize(0), vertexData->vertexCount, Ogre::HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
+	Ogre::VertexBufferBinding* binding = vertexData->vertexBufferBinding;
 	binding->setBinding(0, vBuf);
-	float* pVertex = static_cast<float*>(vBuf->lock(HardwareBuffer::HBL_DISCARD));
+	float* pVertex = static_cast<float*>(vBuf->lock(Ogre::HardwareBuffer::HBL_DISCARD));
 
 	// allocate index buffer
 	indexData->indexCount = 6 * nRings * (nSegments + 1);
-	indexData->indexBuffer = HardwareBufferManager::getSingleton().createIndexBuffer(HardwareIndexBuffer::IT_16BIT, indexData->indexCount, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
-	HardwareIndexBufferSharedPtr iBuf = indexData->indexBuffer;
-	unsigned short* pIndices = static_cast<unsigned short*>(iBuf->lock(HardwareBuffer::HBL_DISCARD));
+	indexData->indexBuffer = Ogre::HardwareBufferManager::getSingleton().createIndexBuffer(Ogre::HardwareIndexBuffer::IT_16BIT, indexData->indexCount, Ogre::HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
+	Ogre::HardwareIndexBufferSharedPtr iBuf = indexData->indexBuffer;
+	unsigned short* pIndices = static_cast<unsigned short*>(iBuf->lock(Ogre::HardwareBuffer::HBL_DISCARD));
 
-	float fDeltaRingAngle = (Math::PI / nRings);
-	float fDeltaSegAngle = (2 * Math::PI / nSegments);
+	float fDeltaRingAngle = (Ogre::Math::PI / nRings);
+	float fDeltaSegAngle = (2 * Ogre::Math::PI / nSegments);
 	unsigned short wVerticeIndex = 0 ;
 
 	// Generate the group of rings for the sphere
@@ -110,7 +94,7 @@ void GeomUtils::createSphere(VertexData*& vertexData, IndexData*& indexData
 
 			if (bNormals)
 			{
-				Vector3 vNormal = Vector3(x0, y0, z0).normalisedCopy();
+				Ogre::Vector3 vNormal = Ogre::Vector3(x0, y0, z0).normalisedCopy();
 				*pVertex++ = vNormal.x;
 				*pVertex++ = vNormal.y;
 				*pVertex++ = vNormal.z;
@@ -140,23 +124,23 @@ void GeomUtils::createSphere(VertexData*& vertexData, IndexData*& indexData
 	iBuf->unlock();
 }
 
-void GeomUtils::createQuad(VertexData*& vertexData)
+void GeomUtils::createQuad(Ogre::VertexData*& vertexData)
 {
 	assert(vertexData);
 
 	vertexData->vertexCount = 4;
 	vertexData->vertexStart = 0;
 
-	VertexDeclaration* vertexDecl = vertexData->vertexDeclaration;
-	VertexBufferBinding* bind = vertexData->vertexBufferBinding;
+	Ogre::VertexDeclaration* vertexDecl = vertexData->vertexDeclaration;
+	Ogre::VertexBufferBinding* bind = vertexData->vertexBufferBinding;
 
-	vertexDecl->addElement(0, 0, VET_FLOAT3, VES_POSITION);
+	vertexDecl->addElement(0, 0, Ogre::VET_FLOAT3, Ogre::VES_POSITION);
 
-	HardwareVertexBufferSharedPtr vbuf = 
-		HardwareBufferManager::getSingleton().createVertexBuffer(
+	Ogre::HardwareVertexBufferSharedPtr vbuf = 
+		Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(
 		vertexDecl->getVertexSize(0),
 		vertexData->vertexCount,
-		HardwareBuffer::HBU_STATIC_WRITE_ONLY);
+		Ogre::HardwareBuffer::HBU_STATIC_WRITE_ONLY);
 
 	// Bind buffer
 	bind->setBinding(0, vbuf);
@@ -171,9 +155,9 @@ void GeomUtils::createQuad(VertexData*& vertexData)
 
 void GeomUtils::createCone(const Ogre::String& strName , float radius , float height, int nVerticesInBase)
 {
-	MeshPtr pCone = MeshManager::getSingleton().createManual(strName, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-	SubMesh *pConeVertex = pCone->createSubMesh();
-	pCone->sharedVertexData = new VertexData();
+	Ogre::MeshPtr pCone = Ogre::MeshManager::getSingleton().createManual(strName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	Ogre::SubMesh *pConeVertex = pCone->createSubMesh();
+	pCone->sharedVertexData = new Ogre::VertexData();
 
 	createCone(pCone->sharedVertexData, pConeVertex->indexData
 		, radius
@@ -184,11 +168,11 @@ void GeomUtils::createCone(const Ogre::String& strName , float radius , float he
 	pConeVertex->useSharedVertices = true;
 
 	// the original code was missing this line:
-	pCone->_setBounds( AxisAlignedBox( 
-		Vector3(-radius, 0, -radius), 
-		Vector3(radius, height, radius) ), false );
+	pCone->_setBounds( Ogre::AxisAlignedBox( 
+		Ogre::Vector3(-radius, 0, -radius), 
+		Ogre::Vector3(radius, height, radius) ), false );
 
-	pCone->_setBoundingSphereRadius(Math::Sqrt(height*height + radius*radius));
+	pCone->_setBoundingSphereRadius(Ogre::Math::Sqrt(height*height + radius*radius));
 	// this line makes clear the mesh is loaded (avoids memory leaks)
 	pCone->load();
 }
@@ -200,29 +184,29 @@ void GeomUtils::createCone(Ogre::VertexData*& vertexData, Ogre::IndexData*& inde
 	assert(vertexData && indexData);
 
 	// define the vertex format
-	VertexDeclaration* vertexDecl = vertexData->vertexDeclaration;
+	Ogre::VertexDeclaration* vertexDecl = vertexData->vertexDeclaration;
 	// positions
-	vertexDecl->addElement(0, 0, VET_FLOAT3, VES_POSITION);
+	vertexDecl->addElement(0, 0, Ogre::VET_FLOAT3, Ogre::VES_POSITION);
 	
 	// allocate the vertex buffer
 	vertexData->vertexCount = nVerticesInBase + 1;
-	HardwareVertexBufferSharedPtr vBuf = HardwareBufferManager::getSingleton().createVertexBuffer(vertexDecl->getVertexSize(0), vertexData->vertexCount, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
-	VertexBufferBinding* binding = vertexData->vertexBufferBinding;
+	Ogre::HardwareVertexBufferSharedPtr vBuf = Ogre::HardwareBufferManager::getSingleton().createVertexBuffer(vertexDecl->getVertexSize(0), vertexData->vertexCount, Ogre::HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
+	Ogre::VertexBufferBinding* binding = vertexData->vertexBufferBinding;
 	binding->setBinding(0, vBuf);
-	float* pVertex = static_cast<float*>(vBuf->lock(HardwareBuffer::HBL_DISCARD));
+	float* pVertex = static_cast<float*>(vBuf->lock(Ogre::HardwareBuffer::HBL_DISCARD));
 
 	// allocate index buffer - cone and base
 	indexData->indexCount = (3 * nVerticesInBase) + (3 * (nVerticesInBase - 2));
-	indexData->indexBuffer = HardwareBufferManager::getSingleton().createIndexBuffer(HardwareIndexBuffer::IT_16BIT, indexData->indexCount, HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
-	HardwareIndexBufferSharedPtr iBuf = indexData->indexBuffer;
-	unsigned short* pIndices = static_cast<unsigned short*>(iBuf->lock(HardwareBuffer::HBL_DISCARD));
+	indexData->indexBuffer = Ogre::HardwareBufferManager::getSingleton().createIndexBuffer(Ogre::HardwareIndexBuffer::IT_16BIT, indexData->indexCount, Ogre::HardwareBuffer::HBU_STATIC_WRITE_ONLY, false);
+	Ogre::HardwareIndexBufferSharedPtr iBuf = indexData->indexBuffer;
+	unsigned short* pIndices = static_cast<unsigned short*>(iBuf->lock(Ogre::HardwareBuffer::HBL_DISCARD));
 
 	//Positions : cone head and base
 	for (int i=0; i<3; i++)
 		*pVertex++ = 0.0f;
 
 	//Base :
-	float fDeltaBaseAngle = (2 * Math::PI) / nVerticesInBase;
+	float fDeltaBaseAngle = (2 * Ogre::Math::PI) / nVerticesInBase;
 	for (int i=0; i<nVerticesInBase; i++)
 	{
 		float angle = i * fDeltaBaseAngle;

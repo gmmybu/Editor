@@ -6,17 +6,18 @@
 #include "TerrainManager.h"
 #include <vector>
 
+class CNewSceneDlg;
+class CObjectEditHandler;
+class CTerrainEditHandler;
+class CTerrainManager;
+class DeferredShadingSystem;
 class DynamicModel;
 class Light;
 class LiquidEditHandler;
 class NewLightDlg;
-class CNewSceneDlg;
-class CObjectEditHandler;
 class SceneObject;
 class SceneView;
 class StaticMesh;
-class CTerrainEditHandler;
-class CTerrainManager;
 
 class SceneDoc : public RenderScene
 {
@@ -36,6 +37,9 @@ public:
 
 	SceneView *getActiveView() { return activeView; }
 	void setActiveView(SceneView *activeView) { this->activeView = activeView; }
+
+	DeferredShadingSystem *getDeferredShadingSystem() { return deferredShadingSystem; }
+	void setDeferredShadingSystem(DeferredShadingSystem *deferredShadingSystem) { this->deferredShadingSystem = deferredShadingSystem; }
 
 	CTerrainManager *getTerrainManager() { return terrainManager; }
 	CTerrainManagerConfig *getTerrainManagerConfig() { return &terrainManagerConfig; }
@@ -89,11 +93,14 @@ public:
 
 	int editMode;
 	bool gameMode; bool paste; bool showDebugOverlay;
+	bool deferredShading; bool ssao;
 
 	bool initialized;
 	CString sceneName;
 	CString skyType; CString skyMaterial;
+	
 	SceneView *activeView;
+	DeferredShadingSystem *deferredShadingSystem;
 
 	CTerrainManager *terrainManager;
 	CTerrainManagerConfig terrainManagerConfig;
@@ -105,4 +112,8 @@ public:
 
 	int nameID;
 	std::vector<SceneObject*> objects;
+	afx_msg void OnDeferredShading();
+	afx_msg void OnUpdateDeferredShading(CCmdUI *pCmdUI);
+	afx_msg void OnSsao();
+	afx_msg void OnUpdateSsao(CCmdUI *pCmdUI);
 };

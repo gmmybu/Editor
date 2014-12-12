@@ -1,59 +1,44 @@
-/*
------------------------------------------------------------------------------
-This source file is part of OGRE
-(Object-oriented Graphics Rendering Engine)
-For the latest info, see http://www.ogre3d.org/
-
-Copyright (c) 2000-2013 Torus Knot Software Ltd
-Also see acknowledgements in Readme.html
-
-You may use this sample code for anything you like, it is not covered by the
-same license as the rest of the engine.
------------------------------------------------------------------------------
-*/
-
 #include "stdafx.h"
 #include "GBufferSchemeHandler.h"
 
-#include <OgreMaterialManager.h>
-#include <OgreTechnique.h>
+#include "OgreException.h"
+#include "OgreMaterialManager.h"
+#include "OgreTechnique.h"
 
-using namespace Ogre;
+const Ogre::String GBufferSchemeHandler::NORMAL_MAP_PATTERN = "normal";
 
-const String GBufferSchemeHandler::NORMAL_MAP_PATTERN = "normal";
-
-Technique* GBufferSchemeHandler::handleSchemeNotFound(unsigned short schemeIndex, 
-		const String& schemeName, Material* originalMaterial, unsigned short lodIndex, 
-		const Renderable* rend)
+Ogre::Technique* GBufferSchemeHandler::handleSchemeNotFound(unsigned short schemeIndex, 
+		const Ogre::String& schemeName, Ogre::Material* originalMaterial, unsigned short lodIndex, 
+		const Ogre::Renderable* rend)
 {
 	Ogre::MaterialManager& matMgr = Ogre::MaterialManager::getSingleton();
-	String curSchemeName = matMgr.getActiveScheme();
-	matMgr.setActiveScheme(MaterialManager::DEFAULT_SCHEME_NAME);
-	Technique* originalTechnique = originalMaterial->getBestTechnique(lodIndex, rend);
+	Ogre::String curSchemeName = matMgr.getActiveScheme();
+	matMgr.setActiveScheme(Ogre::MaterialManager::DEFAULT_SCHEME_NAME);
+	Ogre::Technique* originalTechnique = originalMaterial->getBestTechnique(lodIndex, rend);
 	matMgr.setActiveScheme(curSchemeName);
 
-	Technique* gBufferTech = originalMaterial->createTechnique();
+	Ogre::Technique* gBufferTech = originalMaterial->createTechnique();
 	gBufferTech->removeAllPasses();
 	gBufferTech->setSchemeName(schemeName);
 
-	Technique* noGBufferTech = originalMaterial->createTechnique();
+	Ogre::Technique* noGBufferTech = originalMaterial->createTechnique();
 	noGBufferTech->removeAllPasses();
 	noGBufferTech->setSchemeName("NoGBuffer");
 
 	for (unsigned short i=0; i<originalTechnique->getNumPasses(); i++)
 	{
-		Pass* originalPass = originalTechnique->getPass(i);
+		Ogre::Pass* originalPass = originalTechnique->getPass(i);
 		PassProperties props = inspectPass(originalPass, lodIndex, rend);
 		
 		if (!props.isDeferred)
 		{
 			//Just copy the technique so it gets rendered regularly
-			Pass* clonePass = noGBufferTech->createPass();
+			Ogre::Pass* clonePass = noGBufferTech->createPass();
 			*clonePass = *originalPass;
 			continue;
 		}
 
-		Pass* newPass = gBufferTech->createPass();
+		Ogre::Pass* newPass = gBufferTech->createPass();
 		MaterialGenerator::Perm perm = getPermutation(props);
 
 		const Ogre::MaterialPtr& templateMat = mMaterialGenerator.getMaterial(perm);
@@ -67,7 +52,7 @@ Technique* GBufferSchemeHandler::handleSchemeNotFound(unsigned short schemeIndex
 }
 
 bool GBufferSchemeHandler::checkNormalMap(
-	TextureUnitState* tus, GBufferSchemeHandler::PassProperties& props)
+	Ogre::TextureUnitState* tus, GBufferSchemeHandler::PassProperties& props)
 {
 	bool isNormal = false;
 	Ogre::String lowerCaseAlias = tus->getTextureNameAlias();
@@ -94,7 +79,7 @@ bool GBufferSchemeHandler::checkNormalMap(
 		}
 		else
 		{
-			OGRE_EXCEPT(Exception::ERR_DUPLICATE_ITEM,
+			OGRE_EXCEPT(Ogre::Exception::ERR_DUPLICATE_ITEM,
 				"Multiple normal map patterns matches",
 				"GBufferSchemeHandler::inspectPass");
 		}
@@ -103,7 +88,7 @@ bool GBufferSchemeHandler::checkNormalMap(
 }
 
 GBufferSchemeHandler::PassProperties GBufferSchemeHandler::inspectPass(
-	Pass* pass, unsigned short lodIndex, const Renderable* rend)
+	Ogre::Pass* pass, unsigned short lodIndex, const Ogre::Renderable* rend)
 {
 	PassProperties props;
 	
@@ -120,7 +105,7 @@ GBufferSchemeHandler::PassProperties GBufferSchemeHandler::inspectPass(
 
 	for (unsigned short i=0; i<pass->getNumTextureUnitStates(); i++) 
 	{
-		TextureUnitState* tus = pass->getTextureUnitState(i);
+		Ogre::TextureUnitState* tus = pass->getTextureUnitState(i);
 		if (!checkNormalMap(tus, props))
 		{
 			props.regularTextures.push_back(tus);
@@ -132,7 +117,7 @@ GBufferSchemeHandler::PassProperties GBufferSchemeHandler::inspectPass(
 		
 	}
 
-    if (pass->getDiffuse() != ColourValue::White)
+    if (pass->getDiffuse() != Ogre::ColourValue::White)
     {
         props.hasDiffuseColour = true;
     }
@@ -177,7 +162,7 @@ MaterialGenerator::Perm GBufferSchemeHandler::getPermutation(const PassPropertie
 		perm |= GBufferMaterialGenerator::GBP_ONE_TEXCOORD;
 		break;
 	default:
-		OGRE_EXCEPT(Exception::ERR_NOT_IMPLEMENTED,
+		OGRE_EXCEPT(Ogre::Exception::ERR_NOT_IMPLEMENTED,
 			"Can not generate G-Buffer materials for '>3 regular-texture' objects",
 			"GBufferSchemeHandler::inspectPass");
 	}
@@ -200,7 +185,7 @@ MaterialGenerator::Perm GBufferSchemeHandler::getPermutation(const PassPropertie
 }
 
 void GBufferSchemeHandler::fillPass(
-	Pass* gBufferPass, Pass* originalPass, const PassProperties& props)
+	Ogre::Pass* gBufferPass, Ogre::Pass* originalPass, const PassProperties& props)
 {
 	//Reference the correct textures. Normal map first!
 	int texUnitIndex = 0;

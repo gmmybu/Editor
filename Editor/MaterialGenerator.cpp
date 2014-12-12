@@ -1,30 +1,12 @@
-/*
------------------------------------------------------------------------------
-This source file is part of OGRE
-(Object-oriented Graphics Rendering Engine)
-For the latest info, see http://www.ogre3d.org/
-
-Copyright (c) 2000-2013 Torus Knot Software Ltd
-Also see acknowledgements in Readme.html
-
-You may use this sample code for anything you like, it is not covered by the
-same license as the rest of the engine.
------------------------------------------------------------------------------
-*/
-
 #include "stdafx.h"
 #include "MaterialGenerator.h"
 
-#include "OgreStringConverter.h"
 #include "OgreException.h"
-
-#include "OgrePass.h"
-#include "OgreTechnique.h"
-
 #include "OgreHighLevelGpuProgram.h"
 #include "OgreHighLevelGpuProgramManager.h"
-
-using namespace Ogre;
+#include "OgrePass.h"
+#include "OgreStringConverter.h"
+#include "OgreTechnique.h"
 
 MaterialGenerator::MaterialGenerator():
 	vsMask(0), fsMask(0), matMask(0), mImpl(0)
@@ -35,7 +17,7 @@ MaterialGenerator::~MaterialGenerator()
 	delete mImpl;
 }
 
-const MaterialPtr &MaterialGenerator::getMaterial(Perm permutation)
+const Ogre::MaterialPtr &MaterialGenerator::getMaterial(Perm permutation)
 {
 	/// Check if material/shader permutation already was generated
 	MaterialMap::iterator i = mMaterials.find(permutation);
@@ -46,18 +28,18 @@ const MaterialPtr &MaterialGenerator::getMaterial(Perm permutation)
 	else
 	{
 		/// Create it
-		MaterialPtr templ = getTemplateMaterial(permutation & matMask);
-		GpuProgramPtr vs = getVertexShader(permutation & vsMask);
-		GpuProgramPtr fs = getFragmentShader(permutation & fsMask);
+		Ogre::MaterialPtr templ = getTemplateMaterial(permutation & matMask);
+		Ogre::GpuProgramPtr vs = getVertexShader(permutation & vsMask);
+		Ogre::GpuProgramPtr fs = getFragmentShader(permutation & fsMask);
 		
 		/// Create material name
-		String name = materialBaseName + StringConverter::toString(permutation);
+		Ogre::String name = materialBaseName + Ogre::StringConverter::toString(permutation);
 
 		std::cerr << name << " " << vs->getName() << " " << fs->getName() << std::endl;
 		/// Create material from template, and set shaders
-		MaterialPtr mat = templ->clone(name);
-		Technique *tech = mat->getTechnique(0);
-		Pass *pass = tech->getPass(0);
+		Ogre::MaterialPtr mat = templ->clone(name);
+		Ogre::Technique *tech = mat->getTechnique(0);
+		Ogre::Pass *pass = tech->getPass(0);
 		pass->setFragmentProgram(fs->getName());
 		pass->setVertexProgram(vs->getName());
 	
@@ -67,7 +49,7 @@ const MaterialPtr &MaterialGenerator::getMaterial(Perm permutation)
 	}
 }
 
-const GpuProgramPtr &MaterialGenerator::getVertexShader(Perm permutation)
+const Ogre::GpuProgramPtr &MaterialGenerator::getVertexShader(Perm permutation)
 {
 	ProgramMap::iterator i = mVs.find(permutation);
 	if(i != mVs.end())
@@ -82,7 +64,7 @@ const GpuProgramPtr &MaterialGenerator::getVertexShader(Perm permutation)
 	}
 }
 
-const GpuProgramPtr &MaterialGenerator::getFragmentShader(Perm permutation)
+const Ogre::GpuProgramPtr &MaterialGenerator::getFragmentShader(Perm permutation)
 {
 	ProgramMap::iterator i = mFs.find(permutation);
 	if(i != mFs.end())
@@ -97,7 +79,7 @@ const GpuProgramPtr &MaterialGenerator::getFragmentShader(Perm permutation)
 	}
 }
 
-const MaterialPtr &MaterialGenerator::getTemplateMaterial(Perm permutation)
+const Ogre::MaterialPtr &MaterialGenerator::getTemplateMaterial(Perm permutation)
 {
 	MaterialMap::iterator i = mTemplateMat.find(permutation);
 	if(i != mTemplateMat.end())

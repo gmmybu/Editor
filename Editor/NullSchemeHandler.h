@@ -1,21 +1,6 @@
-/*
------------------------------------------------------------------------------
-This source file is part of OGRE
-(Object-oriented Graphics Rendering Engine)
-For the latest info, see http://www.ogre3d.org/
+#pragma once
 
-Copyright (c) 2000-2013 Torus Knot Software Ltd
-Also see acknowledgements in Readme.html
-
-You may use this sample code for anything you like, it is not covered by the
-same license as the rest of the engine.
------------------------------------------------------------------------------
-*/
-
-#ifndef _NULLSCHEMEHANDLER_H
-#define _NULLSCHEMEHANDLER_H
-
-#include <OgreMaterialManager.h>
+#include "OgreMaterialManager.h"
 
 /** Class for skipping materials which do not have the scheme defined
  */
@@ -34,5 +19,3 @@ public:
 		return emptyTech;
 	}
 };
-
-#endif

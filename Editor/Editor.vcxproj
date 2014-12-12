@@ -169,7 +169,6 @@
     <ClInclude Include="SESkeletonManagerEx.h" />
     <ClInclude Include="SESkeletonSerializerEx.h" />
     <ClInclude Include="CharacterController.h" />
-    <ClInclude Include="SharedData.h" />
     <ClInclude Include="SSAOLogic.h" />
     <ClInclude Include="StaticMesh.h" />
     <ClInclude Include="stdafx.h" />

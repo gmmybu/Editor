@@ -1,17 +1,3 @@
-/*
------------------------------------------------------------------------------
-This source file is part of OGRE
-(Object-oriented Graphics Rendering Engine)
-For the latest info, see http://www.ogre3d.org/
-
-Copyright (c) 2000-2013 Torus Knot Software Ltd
-Also see acknowledgements in Readme.html
-
-You may use this sample code for anything you like, it is not covered by the
-same license as the rest of the engine.
------------------------------------------------------------------------------
-*/
-
 #include "stdafx.h"
 #include "GBufferMaterialGenerator.h"
 
@@ -22,8 +8,6 @@ same license as the rest of the engine.
 #include "OgreHighLevelGpuProgramManager.h"
 #include "OgreTechnique.h"
 
-using namespace Ogre;
-
 //Use this directive to control whether you are writing projective (regular) or linear depth.
 #define WRITE_LINEAR_DEPTH
 
@@ -31,21 +15,21 @@ using namespace Ogre;
 class GBufferMaterialGeneratorImpl : public MaterialGenerator::Impl
 {
 public:
-	GBufferMaterialGeneratorImpl(const String& baseName) : 
+	GBufferMaterialGeneratorImpl(const Ogre::String& baseName) : 
       mBaseName(baseName)
       {
-          mIsSm4 = GpuProgramManager::getSingleton().isSyntaxSupported("vs_4_0_level_9_1");
-          mIsGLSL = (GpuProgramManager::getSingleton().isSyntaxSupported("glsl") || GpuProgramManager::getSingleton().isSyntaxSupported("glsles")) &&
-                    !(GpuProgramManager::getSingleton().isSyntaxSupported("vs_1_1") || GpuProgramManager::getSingleton().isSyntaxSupported("arbvp1"));
+          mIsSm4 = Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("vs_4_0_level_9_1");
+          mIsGLSL = (Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsl") || Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsles")) &&
+                    !(Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("vs_1_1") || Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("arbvp1"));
       }
 	
 protected:
-	String mBaseName;
+	Ogre::String mBaseName;
     bool mIsSm4;
     bool mIsGLSL;
-	virtual GpuProgramPtr generateVertexShader(MaterialGenerator::Perm permutation);
-	virtual GpuProgramPtr generateFragmentShader(MaterialGenerator::Perm permutation);
-	virtual MaterialPtr generateTemplateMaterial(MaterialGenerator::Perm permutation);
+	virtual Ogre::GpuProgramPtr generateVertexShader(MaterialGenerator::Perm permutation);
+	virtual Ogre::GpuProgramPtr generateFragmentShader(MaterialGenerator::Perm permutation);
+	virtual Ogre::MaterialPtr generateTemplateMaterial(MaterialGenerator::Perm permutation);
 
 };
 
@@ -57,17 +41,17 @@ GBufferMaterialGenerator::GBufferMaterialGenerator() {
 	mImpl = new GBufferMaterialGeneratorImpl(materialBaseName);
 }
 
-GpuProgramPtr GBufferMaterialGeneratorImpl::generateVertexShader(MaterialGenerator::Perm permutation)
+Ogre::GpuProgramPtr GBufferMaterialGeneratorImpl::generateVertexShader(MaterialGenerator::Perm permutation)
 {
-	StringStream ss;
+	Ogre::StringStream ss;
 
     if(mIsGLSL)
     {
-        int shadingLangVersion = Root::getSingleton().getRenderSystem()->getNativeShadingLanguageVersion();
+        int shadingLangVersion = Ogre::Root::getSingleton().getRenderSystem()->getNativeShadingLanguageVersion();
         const char *inSemantic = shadingLangVersion >= 150 ? "in" : "attribute";
         const char *outSemantic = shadingLangVersion >= 150 ? "out" : "varying";
 
-        if(GpuProgramManager::getSingleton().isSyntaxSupported("glsles"))
+        if(Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsles"))
         {
             ss << "#version 300 es" << std::endl;
             ss << "precision mediump int;" << std::endl;
@@ -79,8 +63,8 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateVertexShader(MaterialGenerat
         ss << inSemantic << " vec4 vertex;" << std::endl;
         ss << inSemantic << " vec3 normal;" << std::endl;
 
-        uint32 numTexCoords = (permutation & GBufferMaterialGenerator::GBP_TEXCOORD_MASK) >> 8;
-        for (uint32 i = 0; i < numTexCoords; i++)
+        Ogre::uint32 numTexCoords = (permutation & GBufferMaterialGenerator::GBP_TEXCOORD_MASK) >> 8;
+        for (Ogre::uint32 i = 0; i < numTexCoords; i++)
         {
             ss << inSemantic << " vec2 uv" << i << ';' << std::endl;
         }
@@ -104,7 +88,7 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateVertexShader(MaterialGenerat
             ss << outSemantic << " vec3 oTangent;" << std::endl;
             ss << outSemantic << " vec3 oBiNormal;" << std::endl;
         }
-        for (uint32 i = 0; i < numTexCoords; i++)
+        for (Ogre::uint32 i = 0; i < numTexCoords; i++)
         {
             ss << outSemantic << " vec2 oUv" << i << ";" << std::endl;
         }
@@ -131,42 +115,42 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateVertexShader(MaterialGenerat
         ss << "	oDepth = gl_Position.w;" << std::endl;
 #endif
 
-        for (uint32 i=0; i<numTexCoords; i++) {
+        for (Ogre::uint32 i=0; i<numTexCoords; i++) {
             ss << "	oUv" << i << " = uv" << i << ';' << std::endl;
         }
 
         ss << "}" << std::endl;
 
-        String programSource = ss.str();
-        String programName = mBaseName + "VP_" + StringConverter::toString(permutation);
+        Ogre::String programSource = ss.str();
+        Ogre::String programName = mBaseName + "VP_" + Ogre::StringConverter::toString(permutation);
 
 #if OGRE_DEBUG_MODE
-        LogManager::getSingleton().getDefaultLog()->logMessage(programSource);
+        Ogre::LogManager::getSingleton().getDefaultLog()->logMessage(programSource);
 #endif
 
         // Create shader object
-        HighLevelGpuProgramPtr ptrProgram;
-        if(GpuProgramManager::getSingleton().isSyntaxSupported("glsles"))
+        Ogre::HighLevelGpuProgramPtr ptrProgram;
+        if(Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsles"))
         {
-            ptrProgram = HighLevelGpuProgramManager::getSingleton().createProgram(programName,
-                                                                                  ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-                                                                                  "glsles", GPT_VERTEX_PROGRAM);
+            ptrProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(programName,
+                                                                                  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+                                                                                  "glsles", Ogre::GPT_VERTEX_PROGRAM);
             ptrProgram->setParameter("syntax", "glsles");
         }
         else
         {
-            ptrProgram = HighLevelGpuProgramManager::getSingleton().createProgram(programName,
-                                                                                  ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-                                                                                  "glsl", GPT_VERTEX_PROGRAM);
+            ptrProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(programName,
+                                                                                  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+                                                                                  "glsl", Ogre::GPT_VERTEX_PROGRAM);
         }
         ptrProgram->setSource(programSource);
 
-        const GpuProgramParametersSharedPtr& params = ptrProgram->getDefaultParameters();
-        params->setNamedAutoConstant("cWorldViewProj", GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX);
-        params->setNamedAutoConstant("cWorldView", GpuProgramParameters::ACT_WORLDVIEW_MATRIX);
+        const Ogre::GpuProgramParametersSharedPtr& params = ptrProgram->getDefaultParameters();
+        params->setNamedAutoConstant("cWorldViewProj", Ogre::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX);
+        params->setNamedAutoConstant("cWorldView", Ogre::GpuProgramParameters::ACT_WORLDVIEW_MATRIX);
         ptrProgram->load();
         
-        return GpuProgramPtr(ptrProgram);
+        return Ogre::GpuProgramPtr(ptrProgram);
     }
     else
     {
@@ -174,8 +158,8 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateVertexShader(MaterialGenerat
         ss << "	float4 iPosition : POSITION," << std::endl;
         ss << "	float3 iNormal   : NORMAL," << std::endl;
 
-        uint32 numTexCoords = (permutation & GBufferMaterialGenerator::GBP_TEXCOORD_MASK) >> 8;
-        for (uint32 i=0; i<numTexCoords; i++) 
+        Ogre::uint32 numTexCoords = (permutation & GBufferMaterialGenerator::GBP_TEXCOORD_MASK) >> 8;
+        for (Ogre::uint32 i=0; i<numTexCoords; i++) 
         {
             ss << "	float2 iUV" << i << " : TEXCOORD" << i << ',' << std::endl;
         }
@@ -215,7 +199,7 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateVertexShader(MaterialGenerat
             ss << "	out float3 oTangent : TEXCOORD" << texCoordNum++ << ',' << std::endl;
             ss << "	out float3 oBiNormal : TEXCOORD" << texCoordNum++ << ',' << std::endl;
         }
-        for (uint32 i=0; i<numTexCoords; i++) 
+        for (Ogre::uint32 i=0; i<numTexCoords; i++) 
         {
             ss << "	out float2 oUV" << i << " : TEXCOORD" << texCoordNum++ << ',' << std::endl;
         }
@@ -243,23 +227,23 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateVertexShader(MaterialGenerat
         ss << "	oDepth = oPosition.w;" << std::endl;
     #endif
 
-        for (uint32 i=0; i<numTexCoords; i++) {
+        for (Ogre::uint32 i=0; i<numTexCoords; i++) {
             ss << "	oUV" << i << " = iUV" << i << ';' << std::endl;
         }
 
         ss << "}" << std::endl;
         
-        String programSource = ss.str();
-        String programName = mBaseName + "VP_" + StringConverter::toString(permutation);
+        Ogre::String programSource = ss.str();
+        Ogre::String programName = mBaseName + "VP_" + Ogre::StringConverter::toString(permutation);
 
     #if OGRE_DEBUG_MODE
-        LogManager::getSingleton().getDefaultLog()->logMessage(programSource);
+        Ogre::LogManager::getSingleton().getDefaultLog()->logMessage(programSource);
     #endif
 
         // Create shader object
-        HighLevelGpuProgramPtr ptrProgram = HighLevelGpuProgramManager::getSingleton().createProgram(
-            programName, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-            "cg", GPT_VERTEX_PROGRAM);
+        Ogre::HighLevelGpuProgramPtr ptrProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+            programName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+            "cg", Ogre::GPT_VERTEX_PROGRAM);
         ptrProgram->setSource(programSource);
         ptrProgram->setParameter("entry_point","ToGBufferVP");
         if(mIsSm4)
@@ -271,26 +255,26 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateVertexShader(MaterialGenerat
             ptrProgram->setParameter("profiles","vs_1_1 arbvp1");
         }
 
-        const GpuProgramParametersSharedPtr& params = ptrProgram->getDefaultParameters();
-        params->setNamedAutoConstant("cWorldViewProj", GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX);
-        params->setNamedAutoConstant("cWorldView", GpuProgramParameters::ACT_WORLDVIEW_MATRIX);
+        const Ogre::GpuProgramParametersSharedPtr& params = ptrProgram->getDefaultParameters();
+        params->setNamedAutoConstant("cWorldViewProj", Ogre::GpuProgramParameters::ACT_WORLDVIEWPROJ_MATRIX);
+        params->setNamedAutoConstant("cWorldView", Ogre::GpuProgramParameters::ACT_WORLDVIEW_MATRIX);
         ptrProgram->load();
 
-        return GpuProgramPtr(ptrProgram);
+        return Ogre::GpuProgramPtr(ptrProgram);
     }
 }
 
-GpuProgramPtr GBufferMaterialGeneratorImpl::generateFragmentShader(MaterialGenerator::Perm permutation)
+Ogre::GpuProgramPtr GBufferMaterialGeneratorImpl::generateFragmentShader(MaterialGenerator::Perm permutation)
 {
-	StringStream ss;
+	Ogre::StringStream ss;
 
     if(mIsGLSL)
     {
-        int shadingLangVersion = Root::getSingleton().getRenderSystem()->getNativeShadingLanguageVersion();
+        int shadingLangVersion = Ogre::Root::getSingleton().getRenderSystem()->getNativeShadingLanguageVersion();
         const char *inSemantic = shadingLangVersion >= 150 ? "in" : "varying";
         const char *outData = shadingLangVersion >= 150 ? "fragData" : "gl_FragData";
         const char *textureFunc = shadingLangVersion >= 150 ? "texture" : "texture2D";
-        if(GpuProgramManager::getSingleton().isSyntaxSupported("glsles"))
+        if(Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsles"))
         {
             ss << "#version 300 es" << std::endl;
             ss << "precision mediump int;" << std::endl;
@@ -317,8 +301,8 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateFragmentShader(MaterialGener
             ss << inSemantic << " vec3 oBiNormal;" << std::endl;
         }
 
-        uint32 numTexCoords = (permutation & GBufferMaterialGenerator::GBP_TEXCOORD_MASK) >> 8;
-        for (uint32 i = 0; i < numTexCoords; i++)
+        Ogre::uint32 numTexCoords = (permutation & GBufferMaterialGenerator::GBP_TEXCOORD_MASK) >> 8;
+        for (Ogre::uint32 i = 0; i < numTexCoords; i++)
         {
             ss << inSemantic << " vec2 oUv" << i << ';' << std::endl;
         }
@@ -330,8 +314,8 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateFragmentShader(MaterialGener
             ss << "uniform sampler2D sNormalMap;" << std::endl;
         }
 
-        uint32 numTextures = permutation & GBufferMaterialGenerator::GBP_TEXTURE_MASK;
-        for (uint32 i = 0; i < numTextures; i++)
+        Ogre::uint32 numTextures = permutation & GBufferMaterialGenerator::GBP_TEXTURE_MASK;
+        for (Ogre::uint32 i = 0; i < numTextures; i++)
         {
             ss << "uniform sampler2D sTex" << i << ";" << std::endl;
         }
@@ -382,35 +366,35 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateFragmentShader(MaterialGener
 
         ss << "}" << std::endl;
 
-        String programSource = ss.str();
-        String programName = mBaseName + "FP_" + StringConverter::toString(permutation);
+        Ogre::String programSource = ss.str();
+        Ogre::String programName = mBaseName + "FP_" + Ogre::StringConverter::toString(permutation);
 
 #if OGRE_DEBUG_MODE
-        LogManager::getSingleton().getDefaultLog()->logMessage(programSource);
+        Ogre::LogManager::getSingleton().getDefaultLog()->logMessage(programSource);
 #endif
 
         // Create shader object
-        HighLevelGpuProgramPtr ptrProgram;
-        if(GpuProgramManager::getSingleton().isSyntaxSupported("glsles"))
+        Ogre::HighLevelGpuProgramPtr ptrProgram;
+        if(Ogre::GpuProgramManager::getSingleton().isSyntaxSupported("glsles"))
         {
-            ptrProgram = HighLevelGpuProgramManager::getSingleton().createProgram(programName,
-                                                                                  ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-                                                                                  "glsles", GPT_FRAGMENT_PROGRAM);
+            ptrProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(programName,
+                                                                                  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+                                                                                  "glsles", Ogre::GPT_FRAGMENT_PROGRAM);
             ptrProgram->setParameter("syntax", "glsles");
         }
         else
         {
-            ptrProgram = HighLevelGpuProgramManager::getSingleton().createProgram(programName,
-                                                                                  ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-                                                                                  "glsl", GPT_FRAGMENT_PROGRAM);
+            ptrProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(programName,
+                                                                                  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+                                                                                  "glsl", Ogre::GPT_FRAGMENT_PROGRAM);
         }
         ptrProgram->setSource(programSource);
 
-        const GpuProgramParametersSharedPtr& params = ptrProgram->getDefaultParameters();
-        params->setNamedAutoConstant("cSpecularity", GpuProgramParameters::ACT_SURFACE_SHININESS);
+        const Ogre::GpuProgramParametersSharedPtr& params = ptrProgram->getDefaultParameters();
+        params->setNamedAutoConstant("cSpecularity", Ogre::GpuProgramParameters::ACT_SURFACE_SHININESS);
         if (numTextures == 0 || permutation & GBufferMaterialGenerator::GBP_HAS_DIFFUSE_COLOUR)
         {
-            params->setNamedAutoConstant("cDiffuseColour", GpuProgramParameters::ACT_SURFACE_DIFFUSE_COLOUR);
+            params->setNamedAutoConstant("cDiffuseColour", Ogre::GpuProgramParameters::ACT_SURFACE_DIFFUSE_COLOUR);
         }
 
         // Bind samplers
@@ -419,18 +403,18 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateFragmentShader(MaterialGener
         {
             params->setNamedConstant("sNormalMap", samplerNum++);
         }
-        for (uint32 i = 0; i < numTextures; i++, samplerNum++)
+        for (Ogre::uint32 i = 0; i < numTextures; i++, samplerNum++)
         {
-            params->setNamedConstant("sTex" + StringConverter::toString(i), samplerNum);
+            params->setNamedConstant("sTex" + Ogre::StringConverter::toString(i), samplerNum);
         }
 
 #ifdef WRITE_LINEAR_DEPTH
         //TODO : Should this be the distance to the far corner, not the far clip distance?
-        params->setNamedAutoConstant("cFarDistance", GpuProgramParameters::ACT_FAR_CLIP_DISTANCE);
+        params->setNamedAutoConstant("cFarDistance", Ogre::GpuProgramParameters::ACT_FAR_CLIP_DISTANCE);
 #endif
         
         ptrProgram->load();
-        return GpuProgramPtr(ptrProgram);
+        return Ogre::GpuProgramPtr(ptrProgram);
     }
     else
     {
@@ -454,8 +438,8 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateFragmentShader(MaterialGener
             ss << "	float3 iBiNormal : TEXCOORD" << texCoordNum++ << ',' << std::endl;
         }
 
-        uint32 numTexCoords = (permutation & GBufferMaterialGenerator::GBP_TEXCOORD_MASK) >> 8;
-        for (uint32 i=0; i<numTexCoords; i++) 
+        Ogre::uint32 numTexCoords = (permutation & GBufferMaterialGenerator::GBP_TEXCOORD_MASK) >> 8;
+        for (Ogre::uint32 i=0; i<numTexCoords; i++) 
         {
             ss << "	float2 iUV" << i << " : TEXCOORD" << texCoordNum++ << ',' << std::endl;
         }
@@ -479,8 +463,8 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateFragmentShader(MaterialGener
                 ss << "	uniform sampler sNormalMap : register(s" << samplerNum++ << ")," << std::endl;
             }
         }
-        uint32 numTextures = permutation & GBufferMaterialGenerator::GBP_TEXTURE_MASK;
-        for (uint32 i=0; i<numTextures; i++) {
+        Ogre::uint32 numTextures = permutation & GBufferMaterialGenerator::GBP_TEXTURE_MASK;
+        for (Ogre::uint32 i=0; i<numTextures; i++) {
             if(mIsSm4)
             {
                 ss << "	uniform sampler2D sTex" << i << " : register(s" << samplerNum++ << ")," << std::endl;
@@ -538,17 +522,17 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateFragmentShader(MaterialGener
 
         ss << "}" << std::endl;
         
-        String programSource = ss.str();
-        String programName = mBaseName + "FP_" + StringConverter::toString(permutation);
+        Ogre::String programSource = ss.str();
+        Ogre::String programName = mBaseName + "FP_" + Ogre::StringConverter::toString(permutation);
 
     #if OGRE_DEBUG_MODE
-        LogManager::getSingleton().getDefaultLog()->logMessage(programSource);
+        Ogre::LogManager::getSingleton().getDefaultLog()->logMessage(programSource);
     #endif
 
         // Create shader object
-        HighLevelGpuProgramPtr ptrProgram = HighLevelGpuProgramManager::getSingleton().createProgram(
-            programName, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-            "cg", GPT_FRAGMENT_PROGRAM);
+        Ogre::HighLevelGpuProgramPtr ptrProgram = Ogre::HighLevelGpuProgramManager::getSingleton().createProgram(
+            programName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
+            "cg", Ogre::GPT_FRAGMENT_PROGRAM);
         ptrProgram->setSource(programSource);
         ptrProgram->setParameter("entry_point","ToGBufferFP");
         if(mIsSm4)
@@ -560,38 +544,38 @@ GpuProgramPtr GBufferMaterialGeneratorImpl::generateFragmentShader(MaterialGener
             ptrProgram->setParameter("profiles","ps_2_0 arbfp1");
         }
 
-        const GpuProgramParametersSharedPtr& params = ptrProgram->getDefaultParameters();
-        params->setNamedAutoConstant("cSpecularity", GpuProgramParameters::ACT_SURFACE_SHININESS);
+        const Ogre::GpuProgramParametersSharedPtr& params = ptrProgram->getDefaultParameters();
+        params->setNamedAutoConstant("cSpecularity", Ogre::GpuProgramParameters::ACT_SURFACE_SHININESS);
         if (numTextures == 0 || permutation & GBufferMaterialGenerator::GBP_HAS_DIFFUSE_COLOUR)
         {
-            params->setNamedAutoConstant("cDiffuseColour", GpuProgramParameters::ACT_SURFACE_DIFFUSE_COLOUR);
+            params->setNamedAutoConstant("cDiffuseColour", Ogre::GpuProgramParameters::ACT_SURFACE_DIFFUSE_COLOUR);
         }
 
     #ifdef WRITE_LINEAR_DEPTH
         //TODO : Should this be the distance to the far corner, not the far clip distance?
-        params->setNamedAutoConstant("cFarDistance", GpuProgramParameters::ACT_FAR_CLIP_DISTANCE);
+        params->setNamedAutoConstant("cFarDistance", Ogre::GpuProgramParameters::ACT_FAR_CLIP_DISTANCE);
     #endif
 
         ptrProgram->load();
-        return GpuProgramPtr(ptrProgram);
+        return Ogre::GpuProgramPtr(ptrProgram);
     }
 }
 
-MaterialPtr GBufferMaterialGeneratorImpl::generateTemplateMaterial(MaterialGenerator::Perm permutation)
+Ogre::MaterialPtr GBufferMaterialGeneratorImpl::generateTemplateMaterial(MaterialGenerator::Perm permutation)
 {
-	String matName = mBaseName + "Mat_" + StringConverter::toString(permutation);
+	Ogre::String matName = mBaseName + "Mat_" + Ogre::StringConverter::toString(permutation);
 
-	MaterialPtr matPtr = MaterialManager::getSingleton().create
-		(matName, ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-	Pass* pass = matPtr->getTechnique(0)->getPass(0);
-	pass->setName(mBaseName + "Pass_" + StringConverter::toString(permutation));
+	Ogre::MaterialPtr matPtr = Ogre::MaterialManager::getSingleton().create
+		(matName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	Ogre::Pass* pass = matPtr->getTechnique(0)->getPass(0);
+	pass->setName(mBaseName + "Pass_" + Ogre::StringConverter::toString(permutation));
 	pass->setLightingEnabled(false);
 	if (permutation & GBufferMaterialGenerator::GBP_NORMAL_MAP)
 	{
 		pass->createTextureUnitState();
 	}
-	uint32 numTextures = permutation & GBufferMaterialGenerator::GBP_TEXTURE_MASK;
-	for (uint32 i=0; i<numTextures; i++)
+	Ogre::uint32 numTextures = permutation & GBufferMaterialGenerator::GBP_TEXTURE_MASK;
+	for (Ogre::uint32 i=0; i<numTextures; i++)
 	{
 		pass->createTextureUnitState();
 	}

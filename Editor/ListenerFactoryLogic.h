@@ -1,19 +1,4 @@
-/*
------------------------------------------------------------------------------
-This source file is part of OGRE
-(Object-oriented Graphics Rendering Engine)
-For the latest info, see http://www.ogre3d.org/
-
-Copyright (c) 2000-2013 Torus Knot Software Ltd
-Also see acknowledgements in Readme.html
-
-You may use this sample code for anything you like, it is not covered by the
-conditions of the standard open source license.
------------------------------------------------------------------------------
-*/
-
-#ifndef _LISTENER_FACTORY_LOGIC_H
-#define _LISTENER_FACTORY_LOGIC_H
+#pragma once
 
 #include <OgreCompositorInstance.h>
 #include <OgreCompositorLogic.h>
@@ -47,5 +32,3 @@ private:
 	ListenerMap mListeners;
 
 };
-
-#endif

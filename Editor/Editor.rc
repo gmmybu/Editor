@@ -150,7 +150,7 @@ BEGIN
     POPUP "ºº ı"
     BEGIN
         MENUITEM "Deferred Shading",            ID_DEFERRED_SHADING
-        MENUITEM "Shadow",                      ID_32811
+        MENUITEM "SSAO",                        ID_SSAO
     END
     POPUP "≤‚ ‘"
     BEGIN
