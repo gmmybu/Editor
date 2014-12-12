@@ -179,6 +179,7 @@
     <ClInclude Include="TerrainEditPage.h" />
     <ClInclude Include="TerrainLayerWidget.h" />
     <ClInclude Include="TerrainManager.h" />
+    <ClInclude Include="TerrainMaterialGeneratorD.h" />
     <ClInclude Include="TexturePopup.h" />
     <ClInclude Include="TexturePreviewPage.h" />
     <ClInclude Include="TextureProp.h" />
@@ -258,6 +259,7 @@
     <ClCompile Include="TerrainEditPage.cpp" />
     <ClCompile Include="TerrainLayerWidget.cpp" />
     <ClCompile Include="TerrainManager.cpp" />
+    <ClCompile Include="TerrainMaterialGeneratorD.cpp" />
     <ClCompile Include="TexturePopup.cpp" />
     <ClCompile Include="TexturePreviewPage.cpp" />
     <ClCompile Include="TextureProp.cpp" />

@@ -1,23 +1,13 @@
-﻿  SceneView.cpp
-  SceneDoc.cpp
-d:\neweditor\editor\scenedoc.cpp(463): warning C4018: “<”: 有符号/无符号不匹配
-d:\neweditor\editor\scenedoc.cpp(564): warning C4018: “<”: 有符号/无符号不匹配
-d:\neweditor\editor\scenedoc.cpp(581): warning C4018: “<”: 有符号/无符号不匹配
-d:\neweditor\editor\scenedoc.cpp(653): warning C4018: “<”: 有符号/无符号不匹配
-d:\neweditor\editor\scenedoc.cpp(875): warning C4018: “<”: 有符号/无符号不匹配
-  ResourceManagerTree.cpp
-  RenderPump.cpp
-  ObjectEditHandler.cpp
-d:\neweditor\dependencies\ogreopcode\include\opcode\ice\icefpu.h(103): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
-d:\neweditor\dependencies\ogreopcode\include\ogreopcodecharactercontroller.h(39): warning C4305: “参数”: 从“double”到“const Ogre::Real”截断
-d:\neweditor\editor\objectedithandler.cpp(435): warning C4244: “初始化”: 从“int”转换到“float”，可能丢失数据
-d:\neweditor\editor\objectedithandler.cpp(436): warning C4244: “初始化”: 从“int”转换到“float”，可能丢失数据
-d:\neweditor\editor\objectedithandler.cpp(443): warning C4244: “=”: 从“LONG”转换到“Ogre::Real”，可能丢失数据
-d:\neweditor\editor\objectedithandler.cpp(449): warning C4244: “初始化”: 从“int”转换到“float”，可能丢失数据
-d:\neweditor\editor\objectedithandler.cpp(456): warning C4244: “初始化”: 从“int”转换到“float”，可能丢失数据
-d:\neweditor\editor\objectedithandler.cpp(457): warning C4244: “初始化”: 从“int”转换到“float”，可能丢失数据
-d:\neweditor\editor\objectedithandler.cpp(460): warning C4244: “=”: 从“LONG”转换到“Ogre::Real”，可能丢失数据
-  Editor.cpp
+﻿  TerrainMaterialGeneratorD.cpp
+  TerrainManager.cpp
+d:\neweditor\editor\terrainmanager.cpp(33): warning C4244: “参数”: 从“Ogre::Real”转换到“Ogre::uint16”，可能丢失数据
+d:\neweditor\editor\terrainmanager.cpp(40): warning C4244: “=”: 从“Ogre::Real”转换到“Ogre::uint16”，可能丢失数据
+d:\neweditor\editor\terrainmanager.cpp(43): warning C4244: “=”: 从“Ogre::Real”转换到“Ogre::uint16”，可能丢失数据
+d:\neweditor\editor\terrainmanager.cpp(44): warning C4244: “=”: 从“Ogre::Real”转换到“Ogre::uint16”，可能丢失数据
+d:\neweditor\editor\terrainmanager.cpp(47): warning C4018: “<”: 有符号/无符号不匹配
+  GameView.cpp
+  GameDoc.cpp
+  DeferredShading.cpp
 Action.obj : warning LNK4075: 忽略“/EDITANDCONTINUE”(由于“/OPT:LBR”规范)
 FreeImage_d.lib(BitmapAccess.obj) : warning LNK4099: 未找到 PDB“vc110.pdb”(使用“FreeImage_d.lib(BitmapAccess.obj)”或在“D:\NewEditor\Debug\vc110.pdb”中寻找)；正在链接对象，如同没有调试信息一样
 FreeImage_d.lib(ColorLookup.obj) : warning LNK4099: 未找到 PDB“vc110.pdb”(使用“FreeImage_d.lib(ColorLookup.obj)”或在“D:\NewEditor\Debug\vc110.pdb”中寻找)；正在链接对象，如同没有调试信息一样

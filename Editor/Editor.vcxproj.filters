@@ -350,6 +350,9 @@
     <ClInclude Include="ImageCombinator.h">
       <Filter>Dialog\ImageCombinator</Filter>
     </ClInclude>
+    <ClInclude Include="TerrainMaterialGeneratorD.h">
+      <Filter>Core\DeferredShading</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DynamicModel.cpp">
@@ -588,6 +591,9 @@
     </ClCompile>
     <ClCompile Include="ImageCombinator.cpp">
       <Filter>Dialog\ImageCombinator</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainMaterialGeneratorD.cpp">
+      <Filter>Core\DeferredShading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
