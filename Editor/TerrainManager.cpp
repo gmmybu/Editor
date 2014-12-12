@@ -15,6 +15,7 @@ CTerrainManager::CTerrainManager(SceneDoc *Owner, CTerrainManagerConfig *Config)
 
 	mTerrainGlobals = OGRE_NEW Ogre::TerrainGlobalOptions();
 	mTerrainGlobals->setDefaultMaterialGenerator(Ogre::TerrainMaterialGeneratorPtr(new Ogre::TerrainMaterialGeneratorD));
+
     mTerrainGlobals->setMaxPixelError(8);
 
 	mTerrainGlobals->setLightMapDirection(Config->LightMapDirection);

@@ -41,7 +41,7 @@ SceneDoc::SceneDoc()
 	gameMode = false;
 	paste = false;
 	showDebugOverlay = false;
-	deferredShading = false;
+	deferredShading = true;
 	ssao = false;
 
 	initialized = false;
