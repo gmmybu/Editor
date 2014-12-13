@@ -36,5 +36,6 @@ float4 main(
 
 	//Get the 3rd root of the depth to show up-close differences
 	return float4(pow(a1.w,0.33), 0, a0.w, 0);
+	// return float4(pow(a1.w,0.33), pow(a1.w,0.33), pow(a1.w,0.33), 0);
 }
 

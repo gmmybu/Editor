@@ -17,7 +17,7 @@
 
 #include "OgreOpcode.h"
 
-CObjectEditHandler::CObjectEditHandler(SceneDoc *Owner)
+ObjectEditHandler::ObjectEditHandler(SceneDoc *Owner)
 {
 	mOwner = Owner;
 	mMode = OEM_NONE;
@@ -242,14 +242,14 @@ CObjectEditHandler::CObjectEditHandler(SceneDoc *Owner)
 	mObjectEditNode->removeChild(mRotateNode);
 }
 
-CObjectEditHandler::~CObjectEditHandler()
+ObjectEditHandler::~ObjectEditHandler()
 {
 	delete mCollisionManager;
 	
 	// Was done by owner
 }
 
-void CObjectEditHandler::SetMode(KObjectEditMode Mode)
+void ObjectEditHandler::SetMode(KObjectEditMode Mode)
 {
 	if(mMode == Mode)
 		return;
@@ -318,7 +318,7 @@ void CObjectEditHandler::SetMode(KObjectEditMode Mode)
 	ToolBar->OnUpdateCmdUI((CFrameWnd*)ToolBar->GetOwner(), FALSE);
 }
 
-void CObjectEditHandler::SetTarget(SceneObject *Target)
+void ObjectEditHandler::SetTarget(SceneObject *Target)
 {
 	if(mTarget != NULL)
 	{
@@ -336,7 +336,7 @@ void CObjectEditHandler::SetTarget(SceneObject *Target)
 	}
 }
 
-void CObjectEditHandler::OnLButtonDown(CPoint point)
+void ObjectEditHandler::OnLButtonDown(CPoint point)
 {
 	if(mMode == OEM_NONE)
 		return;
@@ -354,7 +354,7 @@ void CObjectEditHandler::OnLButtonDown(CPoint point)
 	}
 }
 
-void CObjectEditHandler::OnLButtonUp(CPoint point)
+void ObjectEditHandler::OnLButtonUp(CPoint point)
 {
 	if(mTarget)
 		return;
@@ -396,7 +396,7 @@ void CObjectEditHandler::OnLButtonUp(CPoint point)
 	}while(++resultIter != result.end());
 }
 
-void CObjectEditHandler::Roaming(CPoint Point, Ogre::TerrainGroup::RayResult rayResult, float Elapsed)
+void ObjectEditHandler::Roaming(CPoint Point, Ogre::TerrainGroup::RayResult rayResult, float Elapsed)
 {
 	if(mMode == OEM_NONE)
 		return;
@@ -588,11 +588,11 @@ void CObjectEditHandler::Roaming(CPoint Point, Ogre::TerrainGroup::RayResult ray
 	}
 }
 
-void CObjectEditHandler::update(float Elapsed)
+void ObjectEditHandler::update(float Elapsed)
 {
 }
 
-OgreOpcode::CollisionObject *CObjectEditHandler::AddCollisionEntity(
+OgreOpcode::CollisionObject *ObjectEditHandler::AddCollisionEntity(
 	OgreOpcode::CollisionContext *Context, Ogre::Entity *Entity)
 {
 	OgreOpcode::CollisionObject *Object = NULL;
@@ -610,7 +610,7 @@ OgreOpcode::CollisionObject *CObjectEditHandler::AddCollisionEntity(
 	return Object;
 }
 
-void CObjectEditHandler::Translate(SceneObject *Object, Ogre::Vector3 vTrans, BOOL Paste)
+void ObjectEditHandler::Translate(SceneObject *Object, Ogre::Vector3 vTrans, BOOL Paste)
 {
 	Ogre::Vector3 Position = Object->getSceneNode()->getPosition();
 	Position.x += vTrans.x;

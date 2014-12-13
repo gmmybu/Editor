@@ -16,6 +16,7 @@
 #include "StaticMesh.h"
 #include "TerrainEditHandler.h"
 #include "DeferredShading.h"
+#include "TerrainManager.h"
 
 #include "OgreRoot.h"
 #include "OgreCamera.h"
@@ -38,18 +39,21 @@ SceneDoc *SceneDoc::current = NULL;
 SceneDoc::SceneDoc()
 {
 	editMode = 0;
-	gameMode = false;
 	paste = false;
 	showDebugOverlay = false;
-	deferredShading = true;
-	ssao = false;
 
 	initialized = false;
 	activeView = NULL;
+
+	active = true;
+	ssao = false;
+	deferredShadingMode = ID_DEFERREDSHADING_REGULARVIEW;
+
+	terrainManager = NULL;
+	terrainManagerConfig = NULL;
 	terrainEditHandler = NULL;
 	objectEditHandler = NULL;
 	liquidEditHandler = NULL;
-	terrainManager = NULL;
 
 	nameID = 0;
 }
@@ -58,7 +62,7 @@ SceneDoc::~SceneDoc()
 {
 }
 
-void SceneDoc::initialize(CNewSceneDlg *Dlg)
+void SceneDoc::initialize(NewSceneDlg *Dlg)
 {
 	sceneName = Dlg->GetProperty(NSD_SCENE_NAME);
 	SetTitle(sceneName);
@@ -134,48 +138,50 @@ void SceneDoc::initialize(CNewSceneDlg *Dlg)
         camera->setFarClipDistance(0);
     }
 
+	terrainManagerConfig = new TerrainManagerConfig;
+
 	Ogre::Real LightMapDirectionX = Dlg->GetProperty(NSD_LIGHT_MAP_DIRECTION_X);
 	Ogre::Real LightMapDirectionY = Dlg->GetProperty(NSD_LIGHT_MAP_DIRECTION_Y);
 	Ogre::Real LightMapDirectionZ = Dlg->GetProperty(NSD_LIGHT_MAP_DIRECTION_Z);
-	terrainManagerConfig.LightMapDirection = Ogre::Vector3(LightMapDirectionX, LightMapDirectionY, LightMapDirectionZ);
-	terrainManagerConfig.LightMapSize = Dlg->GetProperty(NSD_LIGHT_MAP_SIZE);
+	terrainManagerConfig->LightMapDirection = Ogre::Vector3(LightMapDirectionX, LightMapDirectionY, LightMapDirectionZ);
+	terrainManagerConfig->LightMapSize = Dlg->GetProperty(NSD_LIGHT_MAP_SIZE);
 
-	terrainManagerConfig.CompositeMapAmbient = sceneManager->getAmbientLight();
+	terrainManagerConfig->CompositeMapAmbient = sceneManager->getAmbientLight();
 	COLORREF refCompositeMapDiffuse = Dlg->GetProperty(NSD_COMPOSITE_MAP_DIFFUSE);
-	terrainManagerConfig.CompositeMapDiffuse = 
+	terrainManagerConfig->CompositeMapDiffuse = 
 		Ogre::ColourValue(GetRValue(refCompositeMapDiffuse)/255.0f, GetGValue(refCompositeMapDiffuse)/255.0f, GetBValue(refCompositeMapDiffuse)/255.0f);
-	terrainManagerConfig.CompositeMapDistance = Dlg->GetProperty(NSD_COMPOSITE_MAP_DISTANCE);
-	terrainManagerConfig.CompositeMapSize = Dlg->GetProperty(NSD_COMPOSITE_MAP_SIZE);
+	terrainManagerConfig->CompositeMapDistance = Dlg->GetProperty(NSD_COMPOSITE_MAP_DISTANCE);
+	terrainManagerConfig->CompositeMapSize = Dlg->GetProperty(NSD_COMPOSITE_MAP_SIZE);
 
-	terrainManagerConfig.FilenamePrefix = 
+	terrainManagerConfig->FilenamePrefix = 
 		Ogre::String((CString)Dlg->GetProperty(NSD_FILENAME_PREFIX));
-	terrainManagerConfig.FilenameExtension = 
+	terrainManagerConfig->FilenameExtension = 
 		Ogre::String((CString)Dlg->GetProperty(NSD_FILENAME_EXTENSION));
 
-	terrainManagerConfig.TerrainSize = Dlg->GetProperty(NSD_TERRAIN_SIZE);
-	terrainManagerConfig.WorldSize = Dlg->GetProperty(NSD_WORLD_SIZE);
-	terrainManagerConfig.InputScale = Dlg->GetProperty(NSD_INPUT_SCALE);
-	terrainManagerConfig.MinBatchSize = Dlg->GetProperty(NSD_MIN_BATCH_SIZE);
-	terrainManagerConfig.MaxBatchSize = Dlg->GetProperty(NSD_MAX_BATCH_SIZE);
+	terrainManagerConfig->TerrainSize = Dlg->GetProperty(NSD_TERRAIN_SIZE);
+	terrainManagerConfig->WorldSize = Dlg->GetProperty(NSD_WORLD_SIZE);
+	terrainManagerConfig->InputScale = Dlg->GetProperty(NSD_INPUT_SCALE);
+	terrainManagerConfig->MinBatchSize = Dlg->GetProperty(NSD_MIN_BATCH_SIZE);
+	terrainManagerConfig->MaxBatchSize = Dlg->GetProperty(NSD_MAX_BATCH_SIZE);
 	
-	terrainManagerConfig.LayerCount = 1;
-	terrainManagerConfig.TextureWorldSizes.push_back(Dlg->GetProperty(NSD_TEXTURE_WORLD_SIZE));
-	terrainManagerConfig.DiffuseSpeculars.push_back(
+	terrainManagerConfig->LayerCount = 1;
+	terrainManagerConfig->TextureWorldSizes.push_back(Dlg->GetProperty(NSD_TEXTURE_WORLD_SIZE));
+	terrainManagerConfig->DiffuseSpeculars.push_back(
 		Ogre::String((CString)Dlg->GetProperty(NSD_DIFFUSE_SPECULAR)));
-	terrainManagerConfig.NormalHeights.push_back(
+	terrainManagerConfig->NormalHeights.push_back(
 		Ogre::String((CString)Dlg->GetProperty(NSD_NORMAL_HEIGHT)));
 
-	terrainManagerConfig.LoadFromFile = false;
-	terrainManagerConfig.HeightMap = 
+	terrainManagerConfig->LoadFromFile = false;
+	terrainManagerConfig->HeightMap = 
 		Ogre::String((CString)Dlg->GetProperty(NSD_HEIGHT_MAP));
 
-	terrainManager = new CTerrainManager(this, &terrainManagerConfig);
+	terrainManager = new TerrainManager(this, terrainManagerConfig);
 
 	CString strShadowTechnique = Dlg->GetProperty(NSD_SHADOW_TECHNIQUE);
 	configureShadows(strShadowTechnique != "None", strShadowTechnique == "Depth Shadows");
 
-	terrainEditHandler = new CTerrainEditHandler(this);
-	objectEditHandler = new CObjectEditHandler(this);
+	terrainEditHandler = new TerrainEditHandler(this);
+	objectEditHandler = new ObjectEditHandler(this);
 	liquidEditHandler = new LiquidEditHandler(this);
 
 	initialized = TRUE;
@@ -268,58 +274,60 @@ void SceneDoc::initialize(CString Filename)
 	// Terrain manager config
 	//////////////////////////////////////////////////
 
+	terrainManagerConfig = new TerrainManagerConfig;
+
 	Elmt = Elmt->NextSiblingElement();
 	SubElmt = Elmt->FirstChildElement();
 
-	sscanf(SubElmt->Attribute("Direction"), "%f,%f,%f", &terrainManagerConfig.LightMapDirection.x,
-		&terrainManagerConfig.LightMapDirection.y, &terrainManagerConfig.LightMapDirection.z);
-	sscanf(SubElmt->Attribute("Size"), "%u", &terrainManagerConfig.LightMapSize);
+	sscanf(SubElmt->Attribute("Direction"), "%f,%f,%f", &terrainManagerConfig->LightMapDirection.x,
+		&terrainManagerConfig->LightMapDirection.y, &terrainManagerConfig->LightMapDirection.z);
+	sscanf(SubElmt->Attribute("Size"), "%u", &terrainManagerConfig->LightMapSize);
 
 	SubElmt = SubElmt->NextSiblingElement();
 
-	sscanf(SubElmt->Attribute("Ambient"), "%f,%f,%f", &terrainManagerConfig.CompositeMapAmbient.r,
-		&terrainManagerConfig.CompositeMapAmbient.g, &terrainManagerConfig.CompositeMapAmbient.b);
-	sscanf(SubElmt->Attribute("Diffuse"), "%f,%f,%f", &terrainManagerConfig.CompositeMapDiffuse.r,
-		&terrainManagerConfig.CompositeMapDiffuse.g, &terrainManagerConfig.CompositeMapDiffuse.b);
-	sscanf(SubElmt->Attribute("Distance"), "%f", &terrainManagerConfig.CompositeMapDistance);
-	sscanf(SubElmt->Attribute("Size"), "%u", &terrainManagerConfig.CompositeMapSize);
+	sscanf(SubElmt->Attribute("Ambient"), "%f,%f,%f", &terrainManagerConfig->CompositeMapAmbient.r,
+		&terrainManagerConfig->CompositeMapAmbient.g, &terrainManagerConfig->CompositeMapAmbient.b);
+	sscanf(SubElmt->Attribute("Diffuse"), "%f,%f,%f", &terrainManagerConfig->CompositeMapDiffuse.r,
+		&terrainManagerConfig->CompositeMapDiffuse.g, &terrainManagerConfig->CompositeMapDiffuse.b);
+	sscanf(SubElmt->Attribute("Distance"), "%f", &terrainManagerConfig->CompositeMapDistance);
+	sscanf(SubElmt->Attribute("Size"), "%u", &terrainManagerConfig->CompositeMapSize);
 
 	SubElmt = SubElmt->NextSiblingElement();
 	
-	terrainManagerConfig.FilenamePrefix = SubElmt->Attribute("FilenamePrefix");
-	terrainManagerConfig.FilenameExtension = SubElmt->Attribute("FilenameExtension");
-	sscanf(SubElmt->Attribute("TerrainSize"), "%f", &terrainManagerConfig.TerrainSize);
-	sscanf(SubElmt->Attribute("WorldSize"), "%f", &terrainManagerConfig.WorldSize);
-	sscanf(SubElmt->Attribute("InputScale"), "%f", &terrainManagerConfig.InputScale);
-	sscanf(SubElmt->Attribute("MinBatchSize"), "%f", &terrainManagerConfig.MinBatchSize);
-	sscanf(SubElmt->Attribute("MaxBatchSize"), "%f", &terrainManagerConfig.MaxBatchSize);
+	terrainManagerConfig->FilenamePrefix = SubElmt->Attribute("FilenamePrefix");
+	terrainManagerConfig->FilenameExtension = SubElmt->Attribute("FilenameExtension");
+	sscanf(SubElmt->Attribute("TerrainSize"), "%f", &terrainManagerConfig->TerrainSize);
+	sscanf(SubElmt->Attribute("WorldSize"), "%f", &terrainManagerConfig->WorldSize);
+	sscanf(SubElmt->Attribute("InputScale"), "%f", &terrainManagerConfig->InputScale);
+	sscanf(SubElmt->Attribute("MinBatchSize"), "%f", &terrainManagerConfig->MinBatchSize);
+	sscanf(SubElmt->Attribute("MaxBatchSize"), "%f", &terrainManagerConfig->MaxBatchSize);
 
 	SubElmt = SubElmt->NextSiblingElement();
 
-	terrainManagerConfig.LayerCount = 0;
+	terrainManagerConfig->LayerCount = 0;
 	while(SubElmt != NULL)
 	{
-		terrainManagerConfig.LayerCount++;
+		terrainManagerConfig->LayerCount++;
 
 		Ogre::Real TextureWorldSize;
 		sscanf(SubElmt->Attribute("TextureWorldSize"), "%f", &TextureWorldSize);
 		Ogre::String DiffuseSpecular = SubElmt->Attribute("DiffuseSpecular");
 		Ogre::String NormalHeight = SubElmt->Attribute("NormalHeight");
-		terrainManagerConfig.TextureWorldSizes.push_back(TextureWorldSize);
-		terrainManagerConfig.DiffuseSpeculars.push_back(DiffuseSpecular);
-		terrainManagerConfig.NormalHeights.push_back(NormalHeight);
+		terrainManagerConfig->TextureWorldSizes.push_back(TextureWorldSize);
+		terrainManagerConfig->DiffuseSpeculars.push_back(DiffuseSpecular);
+		terrainManagerConfig->NormalHeights.push_back(NormalHeight);
 
 		SubElmt = SubElmt->NextSiblingElement();
 	}
 
-	terrainManagerConfig.LoadFromFile = true;
-	terrainManager = new CTerrainManager(this, &terrainManagerConfig);
+	terrainManagerConfig->LoadFromFile = true;
+	terrainManager = new TerrainManager(this, terrainManagerConfig);
 
 	//CString strShadowTechnique = Dlg->GetProperty(NSD_SHADOW_TECHNIQUE);
 	//ConfigureShadows(strShadowTechnique != "None", strShadowTechnique == "Depth Shadows");
 
-	terrainEditHandler = new CTerrainEditHandler(this);
-	objectEditHandler = new CObjectEditHandler(this);
+	terrainEditHandler = new TerrainEditHandler(this);
+	objectEditHandler = new ObjectEditHandler(this);
 	liquidEditHandler = new LiquidEditHandler(this);
 
 	Elmt = Elmt->NextSiblingElement();
@@ -419,6 +427,7 @@ void SceneDoc::destroy()
 		delete liquidEditHandler;
 		delete objectEditHandler;
 		delete terrainEditHandler;
+		delete terrainManagerConfig;
 		delete terrainManager;
 		Ogre::Root::getSingleton().destroySceneManager(sceneManager);
 	}
@@ -450,6 +459,35 @@ void SceneDoc::roaming(CPoint ScreenPoint, float Elapsed)
 	{
 		objectEditHandler->Roaming(ScreenPoint, rayResult, Elapsed);
 	}
+}
+
+void SceneDoc::leftDown(UINT nFlags, CPoint point)
+{
+	if(!initialized)
+		return;
+
+	Ogre::Ray mouseRay = camera->getCameraToViewportRay(
+		point.x/(float)activeView->getWidth(), point.y/(float)activeView->getHeight());
+	Ogre::TerrainGroup::RayResult rayResult = 
+		terrainManager->GetTerrainGroup()->rayIntersects(mouseRay);
+
+	if(editMode == ID_LIQUID_EDIT)
+	{
+		if(!rayResult.hit)
+			return;
+		liquidEditHandler->OnLButtonDown(rayResult);
+	}
+	else
+	{
+		objectEditHandler->OnLButtonDown(point);
+	}
+}
+
+void SceneDoc::leftUp(UINT nFlags, CPoint point)
+{
+	if(!initialized)
+		return;
+	objectEditHandler->OnLButtonUp(point);
 }
 
 void SceneDoc::update(float Elapsed)
@@ -545,15 +583,6 @@ void SceneDoc::selectObject(SceneObject *pObject)
 		objectEditHandler->SetMode(OEM_NONE);
 		return;
 	}
-
-	//if(middle)
-	//{
-	//	Ogre::Vector3 camEnd;
-	//	float fRadius = pObject->getBoundingRadius();
-	//	float camToObject = (fRadius * 2 + camera->getNearClipDistance());
-	//	camEnd = pObject->getSceneNode()->getPosition() - camToObject * camera->getDerivedDirection();
-	//	camera->setPosition(camEnd);
-	//}
 
 	objectEditHandler->SetTarget(pObject);
 	objectEditHandler->SetMode(OEM_TRANS);
@@ -675,38 +704,8 @@ void SceneDoc::configureShadows(bool enabled, bool depthShadows)
 	}
 }
 
-void SceneDoc::OnLButtonDown(UINT nFlags, CPoint point)
-{
-	if(!initialized)
-		return;
-
-	Ogre::Ray mouseRay = camera->getCameraToViewportRay(
-		point.x/(float)activeView->getWidth(), point.y/(float)activeView->getHeight());
-	Ogre::TerrainGroup::RayResult rayResult = 
-		terrainManager->GetTerrainGroup()->rayIntersects(mouseRay);
-
-	if(editMode == ID_LIQUID_EDIT)
-	{
-		if(!rayResult.hit)
-			return;
-		liquidEditHandler->OnLButtonDown(rayResult);
-	}
-	else
-	{
-		objectEditHandler->OnLButtonDown(point);
-	}
-}
-
-void SceneDoc::OnLButtonUp(UINT nFlags, CPoint point)
-{
-	if(!initialized)
-		return;
-	objectEditHandler->OnLButtonUp(point);
-}
-
 BEGIN_MESSAGE_MAP(SceneDoc, CDocument)
-	ON_COMMAND(ID_GAME_MODE, &SceneDoc::OnGameMode)
-	ON_UPDATE_COMMAND_UI(ID_GAME_MODE, &SceneDoc::OnUpdateGameMode)
+	ON_COMMAND(ID_SAVE_SCENE, &SceneDoc::OnSaveScene)
 	ON_COMMAND_RANGE(ID_TRANS_OBJECT, ID_LIQUID_EDIT, OnObjectEdit)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_TRANS_OBJECT, ID_LIQUID_EDIT, OnUpdateObjectEdit)
 	ON_COMMAND(ID_ADD_LIGHT, OnAddLight)
@@ -715,13 +714,21 @@ BEGIN_MESSAGE_MAP(SceneDoc, CDocument)
 	ON_UPDATE_COMMAND_UI(ID_OBJECT_PASTE, OnUpdateObjectPaste)
 	ON_COMMAND(ID_SHOW_DEBUG_OVERLAY, OnShowDebugOverlay)
 	ON_UPDATE_COMMAND_UI(ID_SHOW_DEBUG_OVERLAY, OnUpdateShowDebugOverlay)
-	ON_UPDATE_COMMAND_UI_RANGE(ID_LOAD_BRUSH, ID_RESIZE_BRUSH, OnUpdateBrushMenu)
-	ON_UPDATE_COMMAND_UI_RANGE(ID_LOAD_TEXTURE, ID_RESIZE_TEXTURE, OnUpdateTextureMenu)
-	ON_COMMAND(ID_SAVE_SCENE, &SceneDoc::OnSaveScene)
-	ON_COMMAND(ID_DEFERRED_SHADING, &SceneDoc::OnDeferredShading)
-	ON_UPDATE_COMMAND_UI(ID_DEFERRED_SHADING, &SceneDoc::OnUpdateDeferredShading)
+
+	// Technique
+	ON_COMMAND(ID_DEFERREDSHADING_Active, &SceneDoc::OnDeferredshadingActive)
+	ON_UPDATE_COMMAND_UI(ID_DEFERREDSHADING_Active, &SceneDoc::OnUpdateDeferredshadingActive)
+	ON_COMMAND(ID_DEFERREDSHADING_REGULARVIEW, &SceneDoc::OnDeferredshadingRegularview)
+	ON_COMMAND(ID_DEFERREDSHADING_DEBUGCOLOURS, &SceneDoc::OnDeferredshadingDebugcolours)
+	ON_COMMAND(ID_DEFERREDSHADING_DEBUGNORMALS, &SceneDoc::OnDeferredshadingDebugnormals)
+	ON_COMMAND(ID_DEFERREDSHADING_DEBUGDEPTH, &SceneDoc::OnDeferredshadingDebugdepth)
+	ON_UPDATE_COMMAND_UI_RANGE(ID_DEFERREDSHADING_REGULARVIEW, ID_DEFERREDSHADING_DEBUGDEPTH, &SceneDoc::OnUpdateDeferredShading)
 	ON_COMMAND(ID_SSAO, &SceneDoc::OnSsao)
 	ON_UPDATE_COMMAND_UI(ID_SSAO, &SceneDoc::OnUpdateSsao)
+
+	ON_UPDATE_COMMAND_UI_RANGE(ID_LOAD_BRUSH, ID_RESIZE_BRUSH, OnUpdateBrushMenu)
+	ON_UPDATE_COMMAND_UI_RANGE(ID_LOAD_TEXTURE, ID_RESIZE_TEXTURE, OnUpdateTextureMenu)
+
 END_MESSAGE_MAP()
 
 void SceneDoc::OnSaveScene()
@@ -816,44 +823,44 @@ void SceneDoc::OnSaveScene()
 		SubElmt = new TiXmlElement("LightMap");
 		Elmt->LinkEndChild(SubElmt);
 
-		sprintf_s(Buff, "%f,%f,%f", terrainManagerConfig.LightMapDirection.x,
-			terrainManagerConfig.LightMapDirection.y, terrainManagerConfig.LightMapDirection.z);
+		sprintf_s(Buff, "%f,%f,%f", terrainManagerConfig->LightMapDirection.x,
+			terrainManagerConfig->LightMapDirection.y, terrainManagerConfig->LightMapDirection.z);
 		SubElmt->SetAttribute("Direction", Buff);
 
-		sprintf_s(Buff, "%u", terrainManagerConfig.LightMapSize);
+		sprintf_s(Buff, "%u", terrainManagerConfig->LightMapSize);
 		SubElmt->SetAttribute("Size", Buff);
 
 		SubElmt = new TiXmlElement("CompisiteMap");
 		Elmt->LinkEndChild(SubElmt);
 
-		sprintf_s(Buff, "%f,%f,%f", terrainManagerConfig.CompositeMapAmbient.r,
-			terrainManagerConfig.CompositeMapAmbient.g, terrainManagerConfig.CompositeMapAmbient.b);
+		sprintf_s(Buff, "%f,%f,%f", terrainManagerConfig->CompositeMapAmbient.r,
+			terrainManagerConfig->CompositeMapAmbient.g, terrainManagerConfig->CompositeMapAmbient.b);
 		SubElmt->SetAttribute("Ambient", Buff);
 
-		sprintf_s(Buff, "%f,%f,%f", terrainManagerConfig.CompositeMapDiffuse.r,
-			terrainManagerConfig.CompositeMapDiffuse.g, terrainManagerConfig.CompositeMapDiffuse.b);
+		sprintf_s(Buff, "%f,%f,%f", terrainManagerConfig->CompositeMapDiffuse.r,
+			terrainManagerConfig->CompositeMapDiffuse.g, terrainManagerConfig->CompositeMapDiffuse.b);
 		SubElmt->SetAttribute("Diffuse", Buff);
 
-		sprintf_s(Buff, "%f", terrainManagerConfig.CompositeMapDistance);
+		sprintf_s(Buff, "%f", terrainManagerConfig->CompositeMapDistance);
 		SubElmt->SetAttribute("Distance", Buff);
 
-		sprintf_s(Buff, "%u", terrainManagerConfig.CompositeMapSize);
+		sprintf_s(Buff, "%u", terrainManagerConfig->CompositeMapSize);
 		SubElmt->SetAttribute("Size", Buff);
 
 		SubElmt = new TiXmlElement("TerrainGroup");
 		Elmt->LinkEndChild(SubElmt);
 
-		SubElmt->SetAttribute("FilenamePrefix", terrainManagerConfig.FilenamePrefix);
-		SubElmt->SetAttribute("FilenameExtension", terrainManagerConfig.FilenameExtension);
-		sprintf_s(Buff, "%f", terrainManagerConfig.TerrainSize);
+		SubElmt->SetAttribute("FilenamePrefix", terrainManagerConfig->FilenamePrefix);
+		SubElmt->SetAttribute("FilenameExtension", terrainManagerConfig->FilenameExtension);
+		sprintf_s(Buff, "%f", terrainManagerConfig->TerrainSize);
 		SubElmt->SetAttribute("TerrainSize", Buff);
-		sprintf_s(Buff, "%f", terrainManagerConfig.WorldSize);
+		sprintf_s(Buff, "%f", terrainManagerConfig->WorldSize);
 		SubElmt->SetAttribute("WorldSize", Buff);
-		sprintf_s(Buff, "%f", terrainManagerConfig.InputScale);
+		sprintf_s(Buff, "%f", terrainManagerConfig->InputScale);
 		SubElmt->SetAttribute("InputScale", Buff);
-		sprintf_s(Buff, "%f", terrainManagerConfig.MinBatchSize);
+		sprintf_s(Buff, "%f", terrainManagerConfig->MinBatchSize);
 		SubElmt->SetAttribute("MinBatchSize", Buff);
-		sprintf_s(Buff, "%f", terrainManagerConfig.MaxBatchSize);
+		sprintf_s(Buff, "%f", terrainManagerConfig->MaxBatchSize);
 		SubElmt->SetAttribute("MaxBatchSize", Buff);
 
 		Ogre::Terrain *Terrain = terrainManager->GetTerrainGroup()->getTerrain(0, 0);
@@ -988,16 +995,6 @@ void SceneDoc::OnSaveScene()
 
 		Doc->SaveFile("../../TestMedia/Scene/" + sceneName + ".scene");
 	}
-}
-
-void SceneDoc::OnGameMode()
-{
-	gameMode = !gameMode;
-}
-
-void SceneDoc::OnUpdateGameMode(CCmdUI *pCmdUI)
-{
-	pCmdUI->SetCheck(gameMode);
 }
 
 void SceneDoc::OnObjectEdit(UINT id)
@@ -1153,6 +1150,57 @@ void SceneDoc::OnUpdateShowDebugOverlay(CCmdUI *pCmdUI)
 	pCmdUI->SetCheck(showDebugOverlay);
 }
 
+void SceneDoc::OnDeferredshadingActive()
+{
+	active = !active;
+	deferredShadingSystem->setActive(active);
+}
+
+void SceneDoc::OnUpdateDeferredshadingActive(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(active);
+}
+
+void SceneDoc::OnDeferredshadingRegularview()
+{
+	deferredShadingSystem->setMode(DeferredShadingSystem::DSM_SHOWLIT);
+	deferredShadingMode = ID_DEFERREDSHADING_REGULARVIEW;
+}
+
+void SceneDoc::OnDeferredshadingDebugcolours()
+{
+	deferredShadingSystem->setMode(DeferredShadingSystem::DSM_SHOWCOLOUR);
+	deferredShadingMode = ID_DEFERREDSHADING_DEBUGCOLOURS;
+}
+
+void SceneDoc::OnDeferredshadingDebugnormals()
+{
+	deferredShadingSystem->setMode(DeferredShadingSystem::DSM_SHOWNORMALS);
+	deferredShadingMode = ID_DEFERREDSHADING_DEBUGNORMALS;
+}
+
+void SceneDoc::OnDeferredshadingDebugdepth()
+{
+	deferredShadingSystem->setMode(DeferredShadingSystem::DSM_SHOWDSP);
+	deferredShadingMode = ID_DEFERREDSHADING_DEBUGDEPTH;
+}
+
+void SceneDoc::OnUpdateDeferredShading(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(pCmdUI->m_nID == deferredShadingMode);
+}
+
+void SceneDoc::OnSsao()
+{
+	ssao = !ssao;
+	deferredShadingSystem->setSSAO(ssao);
+}
+
+void SceneDoc::OnUpdateSsao(CCmdUI *pCmdUI)
+{
+	pCmdUI->SetCheck(ssao);
+}
+
 void SceneDoc::OnUpdateBrushMenu(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(TRUE);
@@ -1161,29 +1209,4 @@ void SceneDoc::OnUpdateBrushMenu(CCmdUI* pCmdUI)
 void SceneDoc::OnUpdateTextureMenu(CCmdUI* pCmdUI)
 {
 	pCmdUI->Enable(TRUE);
-}
-
-void SceneDoc::OnDeferredShading()
-{
-	deferredShading = !deferredShading;
-	deferredShadingSystem->setActive(deferredShading);
-}
-
-
-void SceneDoc::OnUpdateDeferredShading(CCmdUI *pCmdUI)
-{
-	pCmdUI->SetCheck(deferredShading);
-}
-
-
-void SceneDoc::OnSsao()
-{
-	ssao = !ssao;
-	deferredShadingSystem->setSSAO(ssao);
-}
-
-
-void SceneDoc::OnUpdateSsao(CCmdUI *pCmdUI)
-{
-	pCmdUI->SetCheck(ssao);
 }

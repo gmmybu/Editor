@@ -48,7 +48,7 @@ void DeferredShadingSystem::initialize()
 
 	createResources();
 	
-	mActive = true;
+	mActive = false;
 	
 	mSSAO = false;
 	mCurrentMode = DSM_SHOWLIT;

@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "Editor.h"
-#include "SceneDoc.h"
 
 #include "Liquid.h"
 #include "LiquidEditHandler.h"
+#include "SceneDoc.h"
 #include "SceneResourceTree.h"
+#include "TerrainManager.h"
 
 #include "OgreCamera.h"
 #include "OgreEntity.h"

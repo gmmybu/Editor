@@ -30,11 +30,11 @@ enum KObjectEditMode
 	OEM_DELETE = ID_DEL_OBJECT
 };
 
-class CObjectEditHandler
+class ObjectEditHandler
 {
 public:
-	CObjectEditHandler(SceneDoc *Owner);
-	~CObjectEditHandler();
+	ObjectEditHandler(SceneDoc *Owner);
+	~ObjectEditHandler();
 
 	BOOL IsFreeTransform() { return mFreeTransform; }
 	void SetFreeTransform(BOOL FreeTransform) { mFreeTransform = FreeTransform; }

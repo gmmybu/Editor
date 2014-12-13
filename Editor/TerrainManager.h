@@ -11,7 +11,7 @@ namespace Ogre
 	class TerrainGroup;
 }
 
-class CTerrainManagerConfig
+class TerrainManagerConfig
 {
 public:
 	Ogre::Vector3	LightMapDirection;
@@ -40,11 +40,11 @@ public:
 	Ogre::String	HeightMap;
 };
 
-class CTerrainManager
+class TerrainManager
 {
 public:
-	CTerrainManager(SceneDoc *Owner, CTerrainManagerConfig *Config);
-	~CTerrainManager();
+	TerrainManager(SceneDoc *Owner, TerrainManagerConfig *Config);
+	~TerrainManager();
 
 	Ogre::TerrainGlobalOptions *GetTerrainGlobals() { return mTerrainGlobals; }
 	Ogre::TerrainGroup *GetTerrainGroup() { return mTerrainGroup; }

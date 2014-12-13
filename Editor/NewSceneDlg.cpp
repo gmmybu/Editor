@@ -2,35 +2,35 @@
 #include "NewSceneDlg.h"
 #include "TextureProp.h"
 
-IMPLEMENT_DYNAMIC(CNewSceneDlg, CDialog)
+IMPLEMENT_DYNAMIC(NewSceneDlg, CDialog)
 
-CNewSceneDlg::CNewSceneDlg(CWnd* pParent /*=NULL*/)
-	: CDialog(CNewSceneDlg::IDD, pParent)
+NewSceneDlg::NewSceneDlg(CWnd* pParent /*=NULL*/)
+	: CDialog(NewSceneDlg::IDD, pParent)
 {
 }
 
-CNewSceneDlg::~CNewSceneDlg()
+NewSceneDlg::~NewSceneDlg()
 {
 }
 
-BEGIN_MESSAGE_MAP(CNewSceneDlg, CDialog)
-	ON_BN_CLICKED(IDOK, &CNewSceneDlg::OnBnClickedOk)
+BEGIN_MESSAGE_MAP(NewSceneDlg, CDialog)
+	ON_BN_CLICKED(IDOK, &NewSceneDlg::OnBnClickedOk)
 	ON_REGISTERED_MESSAGE(BCGM_PROPERTY_CHANGED, OnPropertyChanged)
 END_MESSAGE_MAP()
 
-void CNewSceneDlg::OnBnClickedOk()
+void NewSceneDlg::OnBnClickedOk()
 {
 	for(int i=0; i<_NSD; i++)
 		mValues[i] = mProps[i]->GetValue();
 	CDialog::OnOK();
 }
 
-LRESULT CNewSceneDlg::OnPropertyChanged(WPARAM wparam, LPARAM lparam)
+LRESULT NewSceneDlg::OnPropertyChanged(WPARAM wparam, LPARAM lparam)
 {
 	return 0;
 }
 
-BOOL CNewSceneDlg::OnInitDialog()
+BOOL NewSceneDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
@@ -181,7 +181,7 @@ BOOL CNewSceneDlg::OnInitDialog()
 	return TRUE;
 }
 
-void CNewSceneDlg::DoDataExchange(CDataExchange* pDX)
+void NewSceneDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_PROPLIST_FRAME, mPropListFrame);

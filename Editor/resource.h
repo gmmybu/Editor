@@ -230,13 +230,19 @@
 #define ID_32811                        32811
 #define ID_DEFERRED_SHADING             32812
 #define ID_SSAO                         32813
+#define ID_DEFERREDSHADING_REGULARVIEW  32814
+#define ID_DEFERREDSHADING_DEBUGCOLOURS 32815
+#define ID_DEFERREDSHADING_DEBUGNORMALS 32816
+#define ID_DEFERREDSHADING_DEBUGDEPTH   32817
+#define ID_DEFERREDSHADING_NONE         32818
+#define ID_DEFERREDSHADING_Active       32819
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        337
-#define _APS_NEXT_COMMAND_VALUE         32814
+#define _APS_NEXT_COMMAND_VALUE         32820
 #define _APS_NEXT_CONTROL_VALUE         1100
 #define _APS_NEXT_SYMED_VALUE           316
 #endif

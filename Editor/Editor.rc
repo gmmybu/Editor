@@ -149,7 +149,15 @@ BEGIN
     END
     POPUP "ºº ı"
     BEGIN
-        MENUITEM "Deferred Shading",            ID_DEFERRED_SHADING
+        POPUP "Deferred Shading"
+        BEGIN
+            MENUITEM "Active",                      ID_DEFERREDSHADING_Active
+            MENUITEM SEPARATOR
+            MENUITEM "Regular view",                ID_DEFERREDSHADING_REGULARVIEW
+            MENUITEM "Debug colours",               ID_DEFERREDSHADING_DEBUGCOLOURS
+            MENUITEM "Debug normals",               ID_DEFERREDSHADING_DEBUGNORMALS
+            MENUITEM "Debug depth / specular",      ID_DEFERREDSHADING_DEBUGDEPTH
+        END
         MENUITEM "SSAO",                        ID_SSAO
     END
     POPUP "≤‚ ‘"

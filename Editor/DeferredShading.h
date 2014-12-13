@@ -72,6 +72,7 @@ public:
 
 	/** Activate or deactivate system
 	 */
+	bool isActive() { return mActive; }
 	void setActive(bool active);
 	
 protected:

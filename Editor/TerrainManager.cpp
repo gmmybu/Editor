@@ -7,7 +7,7 @@
 #include "Terrain\OgreTerrain.h"
 #include "Terrain\OgreTerrainGroup.h"
 
-CTerrainManager::CTerrainManager(SceneDoc *Owner, CTerrainManagerConfig *Config)
+TerrainManager::TerrainManager(SceneDoc *Owner, TerrainManagerConfig *Config)
 {
 	//////////////////////////////////////////////////
 	// Terrain global options
@@ -58,7 +58,7 @@ CTerrainManager::CTerrainManager(SceneDoc *Owner, CTerrainManagerConfig *Config)
     mTerrainGroup->freeTemporaryResources();
 }
 
-CTerrainManager::~CTerrainManager()
+TerrainManager::~TerrainManager()
 {
 	OGRE_DELETE mTerrainGroup;
 	OGRE_DELETE mTerrainGlobals;
@@ -73,7 +73,7 @@ void GetTerrainImage(bool FlipX, bool FlipY, Ogre::String HeightMap, Ogre::Image
         Image.flipAroundX();
 }
 
-void CTerrainManager::DefineTerrain(long X, long Y, Ogre::String HeightMap, bool LoadFromFile)
+void TerrainManager::DefineTerrain(long X, long Y, Ogre::String HeightMap, bool LoadFromFile)
 {
 	// if a file is available, use it
 	// if not, generate file from import

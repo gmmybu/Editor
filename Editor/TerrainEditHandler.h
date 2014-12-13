@@ -14,11 +14,11 @@ enum KTerrainEditMode
 	TEM_BLEND  = ID_BLEND_TERRAIN
 };
 
-class CTerrainEditHandler
+class TerrainEditHandler
 {
 public:
-	CTerrainEditHandler(SceneDoc *Owner);
-	~CTerrainEditHandler();
+	TerrainEditHandler(SceneDoc *Owner);
+	~TerrainEditHandler();
 
 	KTerrainEditMode GetMode() { return mMode; }
 	CTerrainBrush *GetBrush() { return mBrush; }

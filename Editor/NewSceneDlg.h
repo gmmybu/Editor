@@ -39,12 +39,12 @@ enum KNewSceneDlg
 	_NSD
 };
 
-class CNewSceneDlg : public CDialog
+class NewSceneDlg : public CDialog
 {
-	DECLARE_DYNAMIC(CNewSceneDlg)
+	DECLARE_DYNAMIC(NewSceneDlg)
 public:
-	CNewSceneDlg(CWnd* pParent = NULL);   // 标准构造函数
-	virtual ~CNewSceneDlg();
+	NewSceneDlg(CWnd* pParent = NULL);   // 标准构造函数
+	virtual ~NewSceneDlg();
 
 	enum { IDD = IDD_NEW_SCENE };
 

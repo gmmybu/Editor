@@ -73,13 +73,13 @@ void SceneView::OnDestroy()
 
 void SceneView::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	((SceneDoc*)GetDocument())->OnLButtonDown(nFlags, point);
+	((SceneDoc*)GetDocument())->leftDown(nFlags, point);
 	RenderView::OnLButtonDown(nFlags, point);
 }
 
 void SceneView::OnLButtonUp(UINT nFlags, CPoint point)
 {
-	((SceneDoc*)GetDocument())->OnLButtonUp(nFlags, point);
+	((SceneDoc*)GetDocument())->leftUp(nFlags, point);
 	RenderView::OnLButtonUp(nFlags, point);
 }
 

@@ -114,7 +114,7 @@ END_MESSAGE_MAP()
 
 void CEditorApp::OnNewScene()
 {
-	CNewSceneDlg Dlg;
+	NewSceneDlg Dlg;
 	if(Dlg.DoModal() == IDOK)
 	{
 		docTemplates["Scene"]->OpenDocumentFile(NULL);

@@ -1,23 +1,22 @@
 #pragma once
 
+#include "DeferredShading.h"
 #include "OgreShadowCameraSetup.h"
 #include "RenderScene.h"
-#include "ResourceManagerTree.h"
-#include "TerrainManager.h"
 #include <vector>
 
-class CNewSceneDlg;
-class CObjectEditHandler;
-class CTerrainEditHandler;
-class CTerrainManager;
-class DeferredShadingSystem;
 class DynamicModel;
 class Light;
 class LiquidEditHandler;
 class NewLightDlg;
+class NewSceneDlg;
+class ObjectEditHandler;
 class SceneObject;
 class SceneView;
 class StaticMesh;
+class TerrainEditHandler;
+class TerrainManager;
+class TerrainManagerConfig;
 
 class SceneDoc : public RenderScene
 {
@@ -26,7 +25,6 @@ public:
 	SceneDoc();
 	virtual ~SceneDoc();
 
-	bool isGameMode() { return gameMode; }
 	bool isPaste() { return paste; }
 
 	CString getSceneName() { return sceneName; }
@@ -41,11 +39,11 @@ public:
 	DeferredShadingSystem *getDeferredShadingSystem() { return deferredShadingSystem; }
 	void setDeferredShadingSystem(DeferredShadingSystem *deferredShadingSystem) { this->deferredShadingSystem = deferredShadingSystem; }
 
-	CTerrainManager *getTerrainManager() { return terrainManager; }
-	CTerrainManagerConfig *getTerrainManagerConfig() { return &terrainManagerConfig; }
+	TerrainManager *getTerrainManager() { return terrainManager; }
+	TerrainManagerConfig *getTerrainManagerConfig() { return terrainManagerConfig; }
 
-	CTerrainEditHandler *getTerrainEditHandler() { return terrainEditHandler; }
-	CObjectEditHandler *getObjectEditHandler() { return objectEditHandler; }
+	TerrainEditHandler *getTerrainEditHandler() { return terrainEditHandler; }
+	ObjectEditHandler *getObjectEditHandler() { return objectEditHandler; }
 	LiquidEditHandler *getLiquidEditHandler() { return liquidEditHandler; }
 
 	int getNameID() { return nameID; }
@@ -56,7 +54,7 @@ public:
 	/** 防止在未初始化的情况下点中SceneResourceTree而崩溃
 	*/
 	bool isInitialized() { return initialized; }
-	void initialize(CNewSceneDlg *Dlg); void initialize(CString Filename);
+	void initialize(NewSceneDlg *Dlg); void initialize(CString Filename);
 	void destroy();
 
 	StaticMesh *addStaticMesh(CString path);
@@ -68,19 +66,15 @@ public:
 	void configureShadows(bool enabled, bool depthShadows);
 
 	void roaming(CPoint point, float elapsed);
-	void update(float elapsed);
+	void leftDown(UINT nFlags, CPoint point);
+	void leftUp(UINT nFlags, CPoint point);
 
-	void OnLButtonDown(UINT nFlags, CPoint point);
-	void OnLButtonUp(UINT nFlags, CPoint point);
+	void update(float elapsed);
 
 	static SceneDoc *current;
 
-	afx_msg void OnObjectEdit(UINT id);
-
-	DECLARE_MESSAGE_MAP()
 	afx_msg void OnSaveScene();
-	afx_msg void OnGameMode();
-	afx_msg void OnUpdateGameMode(CCmdUI *pCmdUI);
+	afx_msg void OnObjectEdit(UINT id);
 	afx_msg void OnUpdateObjectEdit(CCmdUI* pCmdUI);
 	afx_msg void OnAddLight();
 	afx_msg void OnUpdateAddLight(CCmdUI *pCmdUI);
@@ -88,32 +82,45 @@ public:
 	afx_msg void OnUpdateObjectPaste(CCmdUI *pCmdUI);
 	afx_msg void OnShowDebugOverlay();
 	afx_msg void OnUpdateShowDebugOverlay(CCmdUI *pCmdUI);
+	
+	// Technique
+	afx_msg void OnDeferredshadingActive();
+	afx_msg void OnUpdateDeferredshadingActive(CCmdUI *pCmdUI);
+	afx_msg void OnDeferredshadingRegularview();
+	afx_msg void OnDeferredshadingDebugcolours();
+	afx_msg void OnDeferredshadingDebugnormals();
+	afx_msg void OnDeferredshadingDebugdepth();
+	afx_msg void OnUpdateDeferredShading(CCmdUI *pCmdUI);
+	afx_msg void OnSsao();
+	afx_msg void OnUpdateSsao(CCmdUI *pCmdUI);
+
 	afx_msg void OnUpdateBrushMenu(CCmdUI* pCmdUI);
 	afx_msg void OnUpdateTextureMenu(CCmdUI* pCmdUI);
 
+	DECLARE_MESSAGE_MAP()
+
 	int editMode;
-	bool gameMode; bool paste; bool showDebugOverlay;
-	bool deferredShading; bool ssao;
+	bool paste; bool showDebugOverlay;
 
 	bool initialized;
 	CString sceneName;
 	CString skyType; CString skyMaterial;
 	
 	SceneView *activeView;
-	DeferredShadingSystem *deferredShadingSystem;
 
-	CTerrainManager *terrainManager;
-	CTerrainManagerConfig terrainManagerConfig;
+	// For DeferredShading
+	DeferredShadingSystem *deferredShadingSystem;
+	bool active, ssao;
+	int deferredShadingMode;
+
+	TerrainManager *terrainManager;
+	TerrainManagerConfig *terrainManagerConfig;
 	Ogre::ShadowCameraSetupPtr shadowCameraSetup;
 
-	CTerrainEditHandler *terrainEditHandler;
-	CObjectEditHandler *objectEditHandler;
+	TerrainEditHandler *terrainEditHandler;
+	ObjectEditHandler *objectEditHandler;
 	LiquidEditHandler *liquidEditHandler;
 
 	int nameID;
 	std::vector<SceneObject*> objects;
-	afx_msg void OnDeferredShading();
-	afx_msg void OnUpdateDeferredShading(CCmdUI *pCmdUI);
-	afx_msg void OnSsao();
-	afx_msg void OnUpdateSsao(CCmdUI *pCmdUI);
 };

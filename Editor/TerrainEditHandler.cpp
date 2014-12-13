@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "Editor.h"
-#include "SceneDoc.h"
 
-#include "TerrainEditHandler.h"
+#include "SceneDoc.h"
 #include "TerrainBrush.h"
+#include "TerrainEditHandler.h"
 #include "TerrainEditPage.h"
+#include "TerrainManager.h"
 
 #include "OgreSceneManager.h"
 #include "OgreManualObject.h"
@@ -13,7 +13,7 @@
 #include "OIS\OISKeyboard.h"
 #include "OIS\OISMouse.h"
 
-CTerrainEditHandler::CTerrainEditHandler(SceneDoc *Owner)
+TerrainEditHandler::TerrainEditHandler(SceneDoc *Owner)
 {
 	mOwner = Owner;
 	mMode = TEM_NONE;
@@ -27,12 +27,12 @@ CTerrainEditHandler::CTerrainEditHandler(SceneDoc *Owner)
 }
 
 
-CTerrainEditHandler::~CTerrainEditHandler()
+TerrainEditHandler::~TerrainEditHandler()
 {
 	// Was done by owner
 }
 
-void CTerrainEditHandler::Roaming(Ogre::TerrainGroup::RayResult rayResult, float Elapsed)
+void TerrainEditHandler::Roaming(Ogre::TerrainGroup::RayResult rayResult, float Elapsed)
 {
 	if(mMode == TEM_NONE)
 		return;
@@ -117,7 +117,7 @@ void CTerrainEditHandler::Roaming(Ogre::TerrainGroup::RayResult rayResult, float
 	}
 }
 
-void CTerrainEditHandler::SetMode(KTerrainEditMode Mode)
+void TerrainEditHandler::SetMode(KTerrainEditMode Mode)
 {
 	mMode = Mode;
 	switch(mMode)
@@ -132,7 +132,7 @@ void CTerrainEditHandler::SetMode(KTerrainEditMode Mode)
 	}
 }
 
-void CTerrainEditHandler::update(float Elapsed)
+void TerrainEditHandler::update(float Elapsed)
 {
 	if(mHeightUpdateCountDown > 0)
 	{
